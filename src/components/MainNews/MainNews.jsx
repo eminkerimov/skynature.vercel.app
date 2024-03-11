@@ -16,9 +16,9 @@ const MainNews = () => {
   }, [data])
   
 
-  const moreNews = (prev) => {
-    setNewsCount(prev + 9)
-  }
+   const moreNews = () => {
+    setNewsCount(prev => prev + 9);
+  };
 
   return (
     <section className="mainnews">
