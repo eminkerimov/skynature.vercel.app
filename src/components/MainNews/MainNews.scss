@@ -1,0 +1,103 @@
+.mainnews {
+    a{
+        margin-bottom: 20px;
+        &:hover {
+            box-shadow:0 2px 3px rgba(0,0,0,0.2);
+        }
+    }
+    &-item {
+        &:hover .mainnews-item_content h3 {
+            color: #2c6401;
+        }
+        &:hover .mainnews-item_content p {
+            color: inherit;
+        }
+        &_img {
+            overflow: hidden;
+            border-radius: 8px;
+            height: 250px;
+        }
+        &_content {
+            padding: 8px;
+            p {
+                padding: 8px 0;
+                color: #2c6401;
+                font-weight: 700;
+                font-size: 16px;
+                line-height: 20px;
+            }
+            h3 {
+                color: #63a131;
+                font-weight: 700;
+                font-size: 22px;
+                line-height: 27px;
+                margin-bottom: 15px;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+                overflow: hidden;
+                max-height: 108px;
+            }
+            &_bottom {
+                span {
+                    font-size: 11px;
+                    font-weight: 400;
+                    margin-right: 25px;
+                    color: rgba(0, 0, 0, 0.5);
+                }
+            }
+        }
+        .small {
+            padding: 50px;
+            height: 376px;
+        }
+    }
+    &-more {
+        padding: 40px 0 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        button {
+            background-color: #2c6401;
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 22px;
+            color:#fff;
+            padding: 22px;
+            border: 1px solid #E1E1E1;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .mainnews-item_content{
+        p{
+            font-size: 13px;
+            padding: 0;
+        }
+        h3 {
+            font-size: 19px;
+            margin-bottom: 5px;
+        }
+        &_bottom span{
+            font-size: 10px;
+        }
+    }
+    .mainnews{
+        a {
+            margin-bottom: 7px;
+        }
+        &-item .small{
+            margin-bottom: 15px;
+            height: 300px;
+        }
+        &-more {
+            padding: 20px 0 50px;
+            button {
+                font-size: 13px;
+                padding: 10px 20px;
+            }
+        }
+    } 
+};
