@@ -1,0 +1,426 @@
+@use "../../styles/tokens" as *;
+
+.desktopPanel {
+  position: sticky;
+  top: calc(var(--header-height) + 24px);
+  align-self: start;
+  padding: 24px;
+  border: 1px solid $line;
+  border-radius: $radius-lg;
+  background: $white;
+  box-shadow: $shadow-sm;
+}
+
+.panelHeading,
+.drawerHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+
+  h2 {
+    margin: 4px 0 0;
+    color: $ink;
+    font-size: 1.35rem;
+    line-height: 1.2;
+  }
+}
+
+.eyebrow {
+  color: $green-700;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.resetLink {
+  @include button-reset;
+  margin-top: 4px;
+  color: $green-700;
+  font-size: 0.82rem;
+  font-weight: 700;
+
+  &:hover {
+    color: $green-950;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.fields {
+  display: grid;
+  gap: 22px;
+  margin-top: 26px;
+}
+
+.field {
+  display: grid;
+  gap: 9px;
+
+  > label {
+    color: $ink;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  > select,
+  > input {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 38px 0 13px;
+    border: 1px solid $line;
+    border-radius: 12px;
+    outline: 0;
+    background: $surface;
+    color: $ink;
+    font-size: 0.86rem;
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease,
+      background-color 160ms ease;
+
+    &:hover {
+      border-color: rgba($green-700, 0.48);
+      background: $white;
+    }
+
+    &:focus-visible {
+      border-color: $green-700;
+      box-shadow: 0 0 0 3px rgba($green-300, 0.28);
+      background: $white;
+    }
+  }
+}
+
+.searchInput {
+  position: relative;
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 13px;
+    color: $muted;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  input {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 12px 0 40px;
+    border: 1px solid $line;
+    border-radius: 12px;
+    outline: 0;
+    background: $surface;
+    color: $ink;
+    font-size: 0.86rem;
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease,
+      background-color 160ms ease;
+
+    &::placeholder {
+      color: #89938c;
+    }
+
+    &:hover {
+      border-color: rgba($green-700, 0.48);
+      background: $white;
+    }
+
+    &:focus-visible {
+      border-color: $green-700;
+      box-shadow: 0 0 0 3px rgba($green-300, 0.28);
+      background: $white;
+    }
+  }
+}
+
+.priceGroup,
+.amenities {
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+
+  legend {
+    padding: 0;
+    margin-bottom: 10px;
+    color: $ink;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+}
+
+.priceInputs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: end;
+  gap: 8px;
+
+  label {
+    min-width: 0;
+
+    span {
+      display: block;
+      margin-bottom: 7px;
+      color: $muted;
+      font-size: 0.7rem;
+    }
+  }
+
+  input {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 9px;
+    border: 1px solid $line;
+    border-radius: 11px;
+    outline: 0;
+    background: $surface;
+    color: $ink;
+    font-size: 0.8rem;
+
+    &:focus-visible {
+      border-color: $green-700;
+      box-shadow: 0 0 0 3px rgba($green-300, 0.28);
+      background: $white;
+    }
+  }
+}
+
+.priceSeparator {
+  padding-bottom: 13px;
+  color: $muted;
+}
+
+.amenityList {
+  display: grid;
+  gap: 7px;
+  max-height: 282px;
+  padding-right: 4px;
+  overflow-y: auto;
+  scrollbar-color: rgba($green-700, 0.35) transparent;
+  scrollbar-width: thin;
+}
+
+.checkbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 4px 5px;
+  border-radius: 8px;
+  color: $muted;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+
+  &:hover {
+    color: $ink;
+    background: $surface;
+  }
+
+  input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  > span {
+    position: relative;
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #bcc7be;
+    border-radius: 5px;
+    background: $white;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease;
+  }
+
+  input:checked + span {
+    border-color: $green-700;
+    background: $green-700;
+
+    &::after {
+      position: absolute;
+      top: 3px;
+      left: 6px;
+      width: 4px;
+      height: 8px;
+      border: solid $white;
+      border-width: 0 2px 2px 0;
+      content: "";
+      transform: rotate(45deg);
+    }
+  }
+
+  input:focus-visible + span {
+    @include focus-ring;
+  }
+}
+
+.overlay,
+.drawer {
+  display: none;
+}
+
+.drawerHeading {
+  flex: 0 0 auto;
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid $line;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+}
+
+.closeButton {
+  @include button-reset;
+  display: inline-grid;
+  width: 42px;
+  height: 42px;
+  border: 1px solid $line;
+  border-radius: 50%;
+  place-items: center;
+
+  &:hover {
+    border-color: rgba($green-700, 0.45);
+    background: $surface;
+  }
+}
+
+.drawerBody {
+  flex: 1 1 auto;
+  padding: 0 20px 28px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  .amenityList {
+    max-height: none;
+  }
+}
+
+.drawerActions {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  flex: 0 0 auto;
+  padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid $line;
+  background: rgba($white, 0.98);
+}
+
+.resetButton,
+.applyButton {
+  min-height: 48px;
+  border-radius: 12px;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.resetButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 15px;
+  border: 1px solid $line;
+  background: $white;
+  color: $green-950;
+
+  &:hover {
+    border-color: rgba($green-700, 0.5);
+    background: $surface;
+  }
+}
+
+.applyButton {
+  padding: 0 18px;
+  border: 1px solid $green-950;
+  background: $green-950;
+  color: $white;
+  box-shadow: 0 8px 18px rgba($green-950, 0.16);
+
+  &:hover {
+    border-color: $green-700;
+    background: $green-700;
+  }
+}
+
+@media (max-width: 900px) {
+  .desktopPanel {
+    display: none;
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 120;
+    display: block;
+    border: 0;
+    background: rgba(11, 25, 18, 0.52);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease;
+  }
+
+  .overlayOpen {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 130;
+    display: flex;
+    width: min(430px, 94vw);
+    border-left: 1px solid $line;
+    background: $white;
+    box-shadow: -24px 0 60px rgba($green-950, 0.2);
+    flex-direction: column;
+    transform: translateX(102%);
+    visibility: hidden;
+    transition:
+      transform 240ms ease,
+      visibility 240ms step-end;
+  }
+
+  .drawerOpen {
+    transform: translateX(0);
+    visibility: visible;
+    transition:
+      transform 240ms ease,
+      visibility 0ms step-start;
+  }
+}
+
+@media (max-width: 420px) {
+  .drawer {
+    width: 100%;
+    border-left: 0;
+  }
+
+  .drawerHeading,
+  .drawerBody {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .drawerActions {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}

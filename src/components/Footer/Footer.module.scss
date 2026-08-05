@@ -1,0 +1,124 @@
+@use "../../styles/tokens" as *;
+
+.footer {
+  margin-top: 96px;
+  padding: 72px 0 24px;
+  background: $green-950;
+  color: rgba($white, 0.78);
+}
+
+.inner,
+.bottom {
+  @include container;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 1.45fr 0.7fr 0.7fr 1fr;
+  gap: 56px;
+}
+
+.intro p {
+  max-width: 320px;
+  margin: 24px 0;
+  line-height: 1.7;
+}
+
+.email,
+.note a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: $white;
+  font-size: 0.84rem;
+  font-weight: 700;
+
+  &:hover {
+    color: $green-300;
+  }
+}
+
+.column {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 14px;
+
+  h2 {
+    margin-bottom: 8px;
+    color: $white;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  a {
+    font-size: 0.85rem;
+    transition: color 160ms ease;
+
+    &:hover {
+      color: $green-300;
+    }
+  }
+}
+
+.note {
+  padding: 24px;
+  border: 1px solid rgba($white, 0.13);
+  border-radius: $radius-md;
+  background: rgba($white, 0.05);
+
+  > svg {
+    color: $green-300;
+  }
+
+  p {
+    margin: 16px 0 20px;
+    color: $white;
+    font-size: 0.96rem;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 56px;
+  padding-top: 22px;
+  border-top: 1px solid rgba($white, 0.12);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 950px) {
+  .inner {
+    grid-template-columns: 1.4fr 1fr 1fr;
+  }
+
+  .note {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 650px) {
+  .footer {
+    margin-top: 72px;
+    padding-top: 56px;
+  }
+
+  .inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 28px;
+  }
+
+  .intro,
+  .note {
+    grid-column: 1 / -1;
+  }
+
+  .bottom {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+}

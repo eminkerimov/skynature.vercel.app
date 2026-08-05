@@ -1,0 +1,34 @@
+@use "../../styles/tokens" as *;
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  color: $green-950;
+  font-size: 1.18rem;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.mark {
+  width: 34px;
+  height: 34px;
+  fill: $green-950;
+
+  path:last-child {
+    fill: none;
+    stroke: $green-300;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.2;
+  }
+}
+
+.inverse {
+  color: $white;
+
+  .mark {
+    fill: $white;
+  }
+}

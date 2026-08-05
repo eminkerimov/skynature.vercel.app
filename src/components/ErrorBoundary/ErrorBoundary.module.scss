@@ -1,0 +1,99 @@
+.fallback {
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+  padding: 48px 20px;
+  background: #f5f7f2;
+  color: #17211b;
+}
+
+.panel {
+  width: min(100%, 560px);
+  padding: 48px;
+  border: 1px solid rgba(21, 61, 46, 0.12);
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(21, 61, 46, 0.1);
+  text-align: center;
+}
+
+.mark {
+  width: 56px;
+  height: 56px;
+  display: inline-grid;
+  place-items: center;
+  margin-bottom: 24px;
+  border-radius: 18px;
+  background: #eee8dc;
+  color: #153d2e;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #2f6b4f;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: #153d2e;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.08;
+}
+
+.message {
+  max-width: 430px;
+  margin: 18px auto 30px;
+  color: #68736b;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.reloadButton {
+  min-height: 48px;
+  padding: 12px 24px;
+  border: 0;
+  border-radius: 16px;
+  background: #2f6b4f;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+
+  &:hover {
+    background: #153d2e;
+    box-shadow: 0 10px 24px rgba(21, 61, 46, 0.18);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 3px solid #a8d672;
+    outline-offset: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .panel {
+    padding: 36px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reloadButton {
+    transition: none;
+  }
+}

@@ -1,0 +1,38 @@
+$green-950: #153d2e;
+$green-700: #2f6b4f;
+$green-300: #a8d672;
+$surface: #f5f7f2;
+$warm: #eee8dc;
+$white: #ffffff;
+$ink: #17211b;
+$muted: #68736b;
+$line: #dfe5dd;
+$danger: #a43a32;
+$shadow-sm: 0 8px 24px rgba(23, 33, 27, 0.07);
+$shadow-lg: 0 24px 60px rgba(21, 61, 46, 0.14);
+$radius-sm: 14px;
+$radius-md: 18px;
+$radius-lg: 24px;
+$container: 1200px;
+
+@mixin container {
+  width: min(calc(100% - 40px), $container);
+  margin-inline: auto;
+
+  @media (max-width: 560px) {
+    width: min(calc(100% - 32px), $container);
+  }
+}
+
+@mixin focus-ring {
+  outline: 3px solid rgba($green-300, 0.75);
+  outline-offset: 3px;
+}
+
+@mixin button-reset {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+}

@@ -1,0 +1,37 @@
+@use "../../styles/tokens" as *;
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 42px;
+
+  button {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border: 1px solid $line;
+    border-radius: 12px;
+    background: $white;
+    color: $green-950;
+    font-size: 0.78rem;
+    font-weight: 800;
+    transition: 160ms ease;
+
+    &:hover:not(:disabled) {
+      border-color: $green-700;
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+    }
+  }
+
+  .active {
+    border-color: $green-950;
+    background: $green-950;
+    color: $white;
+  }
+}

@@ -1,0 +1,254 @@
+.page {
+  min-height: 70vh;
+  padding-bottom: 104px;
+  background: #f5f7f2;
+  color: #17211b;
+}
+
+.container {
+  width: min(calc(100% - 40px), 1200px);
+  margin-inline: auto;
+}
+
+.header {
+  position: relative;
+  overflow: hidden;
+  padding: 86px 0 74px;
+  background: #eee8dc;
+
+  &::after {
+    position: absolute;
+    top: -150px;
+    right: 8%;
+    width: 320px;
+    height: 320px;
+    border: 62px solid rgba(47, 107, 79, 0.07);
+    border-radius: 50%;
+    content: "";
+    pointer-events: none;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  h1 {
+    margin: 18px 0 14px;
+    color: #153d2e;
+    font-size: clamp(3rem, 7vw, 5rem);
+    letter-spacing: -0.055em;
+    line-height: 0.98;
+  }
+
+  p {
+    max-width: 570px;
+    margin: 0;
+    color: #68736b;
+    font-size: 1.04rem;
+    line-height: 1.7;
+  }
+}
+
+.content {
+  padding-top: 64px;
+}
+
+.resultsHeading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 34px;
+
+  h2 {
+    margin: 0 0 7px;
+    color: #153d2e;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    letter-spacing: -0.035em;
+  }
+
+  p {
+    margin: 0;
+    color: #68736b;
+  }
+}
+
+.exploreLink,
+.emptyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 48px;
+  border-radius: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+
+  &:focus-visible {
+    outline: 3px solid #a8d672;
+    outline-offset: 4px;
+  }
+}
+
+.exploreLink {
+  padding: 12px 18px;
+  border: 1px solid rgba(21, 61, 46, 0.16);
+  background: #ffffff;
+  color: #2f6b4f;
+
+  &:hover {
+    border-color: #2f6b4f;
+    color: #153d2e;
+    transform: translateY(-1px);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.emptyState {
+  position: relative;
+  overflow: hidden;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 72px 44px;
+  margin: 8px auto 0;
+  border: 1px solid rgba(21, 61, 46, 0.1);
+  border-radius: 24px;
+  background: #ffffff;
+  text-align: center;
+  box-shadow: 0 20px 52px rgba(21, 61, 46, 0.07);
+
+  &::before,
+  &::after {
+    position: absolute;
+    border-radius: 50%;
+    content: "";
+    pointer-events: none;
+  }
+
+  &::before {
+    top: -70px;
+    left: -50px;
+    width: 170px;
+    height: 170px;
+    background: rgba(168, 214, 114, 0.13);
+  }
+
+  &::after {
+    right: -46px;
+    bottom: -76px;
+    width: 190px;
+    height: 190px;
+    background: #eee8dc;
+  }
+
+  h2 {
+    position: relative;
+    margin: 9px 0 14px;
+    color: #153d2e;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.04em;
+  }
+
+  > p {
+    position: relative;
+    max-width: 470px;
+    margin: 0;
+    color: #68736b;
+    line-height: 1.75;
+  }
+}
+
+.emptyIcon {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 24px;
+  border-radius: 21px;
+  background: rgba(168, 214, 114, 0.22);
+  color: #2f6b4f;
+}
+
+.emptyKicker {
+  position: relative;
+  color: #2f6b4f;
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.emptyButton {
+  position: relative;
+  z-index: 1;
+  padding: 13px 22px;
+  margin-top: 30px;
+  background: #2f6b4f;
+  color: #ffffff;
+
+  &:hover {
+    background: #153d2e;
+    transform: translateY(-2px);
+  }
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .page {
+    padding-bottom: 72px;
+  }
+
+  .container {
+    width: min(calc(100% - 32px), 1200px);
+  }
+
+  .header {
+    padding: 64px 0 58px;
+  }
+
+  .content {
+    padding-top: 46px;
+  }
+
+  .resultsHeading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .exploreLink {
+    width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .emptyState {
+    padding: 54px 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exploreLink,
+  .emptyButton {
+    transition: none;
+  }
+}

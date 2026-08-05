@@ -1,70 +1,70 @@
-# Getting Started with Create React App
+# SkyNature
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+SkyNature is a responsive nature-stay discovery and booking experience for fictional eco homes, forest cabins, glamping tents, lakeside hideaways, treehouses, and mountain retreats.
 
-## Available Scripts
+The project is a client-side product demo: listings and reviews are local mock data, favourites persist in the browser, and booking requests are completed locally without a backend or payment.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- Editorial home page with destination search, stay categories, featured stays, destinations, trust points, guest notes, and clear calls to action.
+- Explore catalogue with 24 typed stays, query search, multi-criteria filters, sorting, removable filter chips, pagination, skeleton loading, and an empty state.
+- Filter and page state synchronized with `URLSearchParams`, including browser back/forward support.
+- Responsive desktop filter sidebar and keyboard-accessible mobile filter drawer.
+- Stay detail pages with a responsive gallery, amenities, activities, house information, reviews, related stays, and a sticky booking summary.
+- Accessible booking modal with validation, live cost calculation, focus management, Escape handling, and a success state.
+- Saved stays stored in `localStorage` through a dedicated Context and custom hook.
+- Lazy-loaded routes, dynamic document titles, scroll restoration, error boundary, and a themed 404 page.
+- Local WebP imagery only; there are no remote image or data dependencies.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- React 19 and TypeScript
+- Vite
+- React Router
+- SCSS Modules
+- lucide-react
+- Vitest, React Testing Library, and jest-dom
 
-### `npm test`
+## Project structure
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```text
+src/
+├── assets/       Local fonts and optimized WebP imagery
+├── components/   Reusable interface and behaviour components
+├── context/      Favourites state provider
+├── data/         Typed local stay catalogue
+├── hooks/        Shared React hooks
+├── layouts/      AppLayout with shared header and footer
+├── pages/        Home, Explore, Stay, Saved, and NotFound routes
+├── styles/       Global reset, tokens, and shared design primitives
+├── test/         Global test setup
+├── types/        Domain types
+└── utils/        Filtering, sorting, and formatting helpers
+```
 
-### `npm run build`
+## Commands
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm install
+npm run dev
+npm run build
+npm test
+npm run test:watch
+npm run preview
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Routes
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- `/` — home
+- `/explore` — searchable and filterable catalogue
+- `/stays/:slug` — stay details and booking request
+- `/saved` — locally saved stays
+- `*` — 404 fallback
 
-### `npm run eject`
+## Deployment
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+`vercel.json` rewrites requests to `index.html`, so client-side routes can be opened directly on Vercel.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Testing
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The suite covers the pure filtering/sorting pipeline, favourites persistence and recovery, and the booking form validation, pricing, and success flow.

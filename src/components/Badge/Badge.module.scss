@@ -1,0 +1,29 @@
+@use "../../styles/tokens" as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.light {
+  background: rgba($white, 0.92);
+  color: $green-950;
+  box-shadow: 0 3px 12px rgba($ink, 0.08);
+}
+
+.green {
+  background: rgba($green-300, 0.2);
+  color: $green-950;
+}
+
+.warm {
+  background: $warm;
+  color: $green-950;
+}
