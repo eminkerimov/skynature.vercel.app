@@ -1,10 +1,5 @@
-import forestCabinImage from "../assets/images/stays/forest-cabin.webp";
-import lakeAframeImage from "../assets/images/stays/lake-aframe.webp";
-import glampingTentImage from "../assets/images/stays/glamping-tent.webp";
-import mountainRetreatImage from "../assets/images/stays/mountain-retreat.webp";
-import nordicGlassLodgeImage from "../assets/images/stays/nordic-glass-lodge.webp";
-import coastalEcoCabinImage from "../assets/images/stays/coastal-eco-cabin.webp";
 import { STAY_TYPES, type Stay, type StayInfo, type StayType } from "../types/stay";
+import { getStayCover, getStayGallery } from "./stayImages";
 
 const createStayInfo = (
   minimumNights: number,
@@ -32,8 +27,8 @@ export const stays: Stay[] = [
     maxGuests: 4,
     bedrooms: 2,
     bathrooms: 1,
-    image: forestCabinImage,
-    gallery: [forestCabinImage, mountainRetreatImage, lakeAframeImage, nordicGlassLodgeImage],
+    image: getStayCover("mosswood-ridge-cabin"),
+    gallery: getStayGallery("mosswood-ridge-cabin", "forest"),
     shortDescription: "A warm timber hideaway framed by pine, stone, and open Highland sky.",
     description:
       "Mosswood Ridge Cabin is a fictional private retreat designed for slow mornings and quiet evenings. Its oak-lined living room opens to a sheltered deck, while deep window seats make the changing woodland the focus of every stay.",
@@ -73,8 +68,8 @@ export const stays: Stay[] = [
     maxGuests: 6,
     bedrooms: 3,
     bathrooms: 2,
-    image: coastalEcoCabinImage,
-    gallery: [coastalEcoCabinImage, lakeAframeImage, forestCabinImage, mountainRetreatImage],
+    image: getStayCover("heathland-eco-house"),
+    gallery: getStayGallery("heathland-eco-house", "mountain"),
     shortDescription: "A low-impact family home with generous windows and a sheltered garden terrace.",
     description:
       "Heathland Eco House pairs a calm, contemporary interior with practical spaces for families and small groups. Reclaimed timber, simple natural fabrics, and a bright communal kitchen create an easy base for unhurried days outdoors.",
@@ -114,8 +109,8 @@ export const stays: Stay[] = [
     maxGuests: 2,
     bedrooms: 1,
     bathrooms: 1,
-    image: glampingTentImage,
-    gallery: [glampingTentImage, nordicGlassLodgeImage, lakeAframeImage, mountainRetreatImage],
+    image: getStayCover("fjordline-canvas-camp"),
+    gallery: getStayGallery("fjordline-canvas-camp", "lake"),
     shortDescription: "A canvas suite for two with a private deck facing a broad waterside horizon.",
     description:
       "Fjordline Canvas Camp is an imagined seasonal retreat that combines the closeness of camping with a proper bed, private bathroom, and weatherproof lounge. The restrained interior keeps attention on the water and evening light.",
@@ -155,8 +150,8 @@ export const stays: Stay[] = [
     maxGuests: 4,
     bedrooms: 2,
     bathrooms: 1,
-    image: lakeAframeImage,
-    gallery: [lakeAframeImage, forestCabinImage, coastalEcoCabinImage, glampingTentImage],
+    image: getStayCover("quietwater-a-frame"),
+    gallery: getStayGallery("quietwater-a-frame", "lake"),
     shortDescription: "A crisp A-frame with its own jetty, reading loft, and calm water views.",
     description:
       "Quietwater A-Frame is a fictional lakeside house arranged around a double-height window and compact wood stove. A small reading loft overlooks the main room, while the private jetty gives guests a peaceful place for coffee or a paddle.",
@@ -196,8 +191,8 @@ export const stays: Stay[] = [
     maxGuests: 6,
     bedrooms: 3,
     bathrooms: 2,
-    image: mountainRetreatImage,
-    gallery: [mountainRetreatImage, nordicGlassLodgeImage, forestCabinImage, lakeAframeImage],
+    image: getStayCover("cloudline-stone-retreat"),
+    gallery: getStayGallery("cloudline-stone-retreat", "mountain"),
     shortDescription: "A refined stone retreat with a sauna and wide mountain-facing living room.",
     description:
       "Cloudline Stone Retreat is a fictional high-country home where rough stone walls meet warm oak and wool. The social spaces are generous, the bedrooms remain quiet, and a compact sauna offers a welcome finish after a day outside.",
@@ -237,8 +232,8 @@ export const stays: Stay[] = [
     maxGuests: 2,
     bedrooms: 1,
     bathrooms: 1,
-    image: nordicGlassLodgeImage,
-    gallery: [nordicGlassLodgeImage, forestCabinImage, glampingTentImage, lakeAframeImage],
+    image: getStayCover("canopy-knot-treehouse"),
+    gallery: getStayGallery("canopy-knot-treehouse", "forest"),
     shortDescription: "An elevated hideaway with a circular window and a quiet breakfast balcony.",
     description:
       "Canopy Knot Treehouse is an imagined adults-only escape built around the feeling of being among the branches. Curved joinery, a compact shower room, and a sheltered balcony make the small footprint comfortable in every season.",
@@ -278,8 +273,8 @@ export const stays: Stay[] = [
     maxGuests: 3,
     bedrooms: 1,
     bathrooms: 1,
-    image: forestCabinImage,
-    gallery: [forestCabinImage, nordicGlassLodgeImage, mountainRetreatImage, coastalEcoCabinImage],
+    image: getStayCover("fernwatch-cabin"),
+    gallery: getStayGallery("fernwatch-cabin", "forest"),
     shortDescription: "A compact woodland cabin with a wood stove and fern-lined outdoor shower.",
     description:
       "Fernwatch Cabin is a fictional, straightforward base for guests who prefer time outdoors to oversized interiors. The single bedroom is calm and uncluttered, while the covered porch and outdoor shower extend the usable space.",
@@ -319,8 +314,8 @@ export const stays: Stay[] = [
     maxGuests: 5,
     bedrooms: 2,
     bathrooms: 2,
-    image: coastalEcoCabinImage,
-    gallery: [coastalEcoCabinImage, glampingTentImage, lakeAframeImage, forestCabinImage],
+    image: getStayCover("cork-grove-earth-home"),
+    gallery: getStayGallery("cork-grove-earth-home", "forest"),
     shortDescription: "A softly curved eco home with shaded courtyards and an outdoor dining kitchen.",
     description:
       "Cork Grove Earth Home is a fictional retreat shaped for warm, social days. Limewashed walls and cork finishes keep the rooms tactile and calm, while two shaded courtyards provide separate spaces for meals and afternoon rest.",
@@ -360,8 +355,8 @@ export const stays: Stay[] = [
     maxGuests: 2,
     bedrooms: 1,
     bathrooms: 1,
-    image: glampingTentImage,
-    gallery: [glampingTentImage, forestCabinImage, mountainRetreatImage, coastalEcoCabinImage],
+    image: getStayCover("amber-ridge-glamping"),
+    gallery: getStayGallery("amber-ridge-glamping", "mountain"),
     shortDescription: "A ridge-top bell tent with a private washroom and a deck for long sunsets.",
     description:
       "Amber Ridge Glamping is an imagined camp for couples who want open-air atmosphere with dependable comforts. The tent includes a proper mattress and compact heater, and its detached private washroom is only a few steps away.",
@@ -401,8 +396,8 @@ export const stays: Stay[] = [
     maxGuests: 8,
     bedrooms: 4,
     bathrooms: 2,
-    image: lakeAframeImage,
-    gallery: [lakeAframeImage, forestCabinImage, nordicGlassLodgeImage, mountainRetreatImage],
+    image: getStayCover("pine-mirror-lakeside-lodge"),
+    gallery: getStayGallery("pine-mirror-lakeside-lodge", "lake"),
     shortDescription: "A generous waterside lodge built for shared meals, paddling, and fireside evenings.",
     description:
       "Pine Mirror Lakeside Lodge is a fictional gathering place with four balanced bedrooms and a broad open-plan kitchen. Glass doors connect the dining room to a long deck, giving larger groups room to spread out without losing the communal feel.",
@@ -442,8 +437,8 @@ export const stays: Stay[] = [
     maxGuests: 6,
     bedrooms: 3,
     bathrooms: 2,
-    image: mountainRetreatImage,
-    gallery: [mountainRetreatImage, coastalEcoCabinImage, forestCabinImage, nordicGlassLodgeImage],
+    image: getStayCover("granite-hush-retreat"),
+    gallery: getStayGallery("granite-hush-retreat", "mountain"),
     shortDescription: "A stone-and-timber mountain house with a sheltered hot tub and library wall.",
     description:
       "Granite Hush Retreat is a fictional mountain home designed around quiet shared rituals: cooking, reading, and soaking outside. Its bedrooms sit away from the living room, and the covered terrace remains usable in changing weather.",
@@ -483,8 +478,8 @@ export const stays: Stay[] = [
     maxGuests: 4,
     bedrooms: 2,
     bathrooms: 1,
-    image: nordicGlassLodgeImage,
-    gallery: [nordicGlassLodgeImage, glampingTentImage, forestCabinImage, mountainRetreatImage],
+    image: getStayCover("owl-pine-treehouse"),
+    gallery: getStayGallery("owl-pine-treehouse", "forest"),
     shortDescription: "A two-bedroom treetop home linked by a sheltered bridge and shared canopy deck.",
     description:
       "Owl Pine Treehouse is a fictional family-friendly stay made of two compact pods joined by a covered bridge. One pod holds the living space, while the second keeps the bedrooms calm after younger guests have gone to sleep.",
@@ -524,8 +519,8 @@ export const stays: Stay[] = [
     maxGuests: 5,
     bedrooms: 2,
     bathrooms: 1,
-    image: forestCabinImage,
-    gallery: [forestCabinImage, lakeAframeImage, coastalEcoCabinImage, mountainRetreatImage],
+    image: getStayCover("cedar-trail-cabin"),
+    gallery: getStayGallery("cedar-trail-cabin", "forest"),
     shortDescription: "A practical cedar cabin with a mudroom, covered porch, and family-sized firepit.",
     description:
       "Cedar Trail Cabin is an imagined woodland base shaped around active days outside. A generous mudroom handles wet boots and backpacks, and the simple open kitchen makes it easy for families to settle in without ceremony.",
@@ -565,8 +560,8 @@ export const stays: Stay[] = [
     maxGuests: 6,
     bedrooms: 3,
     bathrooms: 2,
-    image: coastalEcoCabinImage,
-    gallery: [coastalEcoCabinImage, mountainRetreatImage, nordicGlassLodgeImage, forestCabinImage],
+    image: getStayCover("alpine-meadow-eco-home"),
+    gallery: getStayGallery("alpine-meadow-eco-home", "mountain"),
     shortDescription: "A timber eco home with meadow views, a bright studio, and flexible family rooms.",
     description:
       "Alpine Meadow Eco Home is a fictional, energy-conscious house with a warm timber shell and carefully framed outlooks. A small studio supports remote work or creative projects, while sliding panels let families adapt the living space.",
@@ -606,8 +601,8 @@ export const stays: Stay[] = [
     maxGuests: 3,
     bedrooms: 1,
     bathrooms: 1,
-    image: glampingTentImage,
-    gallery: [glampingTentImage, mountainRetreatImage, forestCabinImage, nordicGlassLodgeImage],
+    image: getStayCover("larchlight-glamping"),
+    gallery: getStayGallery("larchlight-glamping", "mountain"),
     shortDescription: "A timber-framed safari tent with a glass roof panel and compact private bathroom.",
     description:
       "Larchlight Glamping is a fictional canvas lodge that balances a rustic setting with crisp, hotel-like essentials. The bedroom includes a small glass roof panel for night views, and a timber vestibule keeps luggage separate from the sleeping area.",
@@ -647,8 +642,8 @@ export const stays: Stay[] = [
     maxGuests: 4,
     bedrooms: 2,
     bathrooms: 1,
-    image: lakeAframeImage,
-    gallery: [lakeAframeImage, mountainRetreatImage, glampingTentImage, forestCabinImage],
+    image: getStayCover("silver-reed-lake-hide"),
+    gallery: getStayGallery("silver-reed-lake-hide", "lake"),
     shortDescription: "A quiet lake hide with a sunken lounge and a reed-edge observation deck.",
     description:
       "Silver Reed Lake Hide is a fictional compact lodge designed for watching changing light and birdlife without leaving the warmth. The sunken lounge keeps sightlines low to the water, and the narrow observation deck sits apart from the main terrace.",
@@ -688,8 +683,8 @@ export const stays: Stay[] = [
     maxGuests: 8,
     bedrooms: 4,
     bathrooms: 3,
-    image: mountainRetreatImage,
-    gallery: [mountainRetreatImage, nordicGlassLodgeImage, lakeAframeImage, coastalEcoCabinImage],
+    image: getStayCover("snowmelt-mountain-house"),
+    gallery: getStayGallery("snowmelt-mountain-house", "mountain"),
     shortDescription: "A spacious alpine retreat with a sauna suite, chef's kitchen, and four calm bedrooms.",
     description:
       "Snowmelt Mountain House is a fictional premium retreat made for extended family stays and thoughtful group trips. The main room centers on a long stone hearth, while a separate wellness suite and reading room provide quieter places to recharge.",
@@ -729,8 +724,8 @@ export const stays: Stay[] = [
     maxGuests: 4,
     bedrooms: 2,
     bathrooms: 1,
-    image: nordicGlassLodgeImage,
-    gallery: [nordicGlassLodgeImage, forestCabinImage, coastalEcoCabinImage, lakeAframeImage],
+    image: getStayCover("cedar-sky-treehouse"),
+    gallery: getStayGallery("cedar-sky-treehouse", "forest"),
     shortDescription: "A modern cedar treehouse with a suspended lounge net and rain-sheltered deck.",
     description:
       "Cedar Sky Treehouse is a fictional elevated home that treats wet weather as part of the experience. A broad roof protects the outdoor deck, while the interior uses warm cedar, generous storage, and a suspended reading net above the lounge.",
@@ -770,8 +765,8 @@ export const stays: Stay[] = [
     maxGuests: 2,
     bedrooms: 1,
     bathrooms: 1,
-    image: forestCabinImage,
-    gallery: [forestCabinImage, coastalEcoCabinImage, glampingTentImage, nordicGlassLodgeImage],
+    image: getStayCover("rainshadow-cabin"),
+    gallery: getStayGallery("rainshadow-cabin", "forest"),
     shortDescription: "A simple off-grid cabin for two with a covered cook porch and compact wood stove.",
     description:
       "Rainshadow Cabin is a fictional no-frills stay for guests who value solitude over extra technology. Solar lighting, a water-saving shower, and a well-organized cook porch cover the essentials while keeping the cabin intentionally modest.",
@@ -811,8 +806,8 @@ export const stays: Stay[] = [
     maxGuests: 4,
     bedrooms: 2,
     bathrooms: 1,
-    image: coastalEcoCabinImage,
-    gallery: [coastalEcoCabinImage, nordicGlassLodgeImage, mountainRetreatImage, lakeAframeImage],
+    image: getStayCover("basalt-horizon-eco-home"),
+    gallery: getStayGallery("basalt-horizon-eco-home", "mountain"),
     shortDescription: "A dark-timber eco home with geothermal warmth and an uninterrupted sky-facing lounge.",
     description:
       "Basalt Horizon Eco Home is a fictional compact house with a deliberately sheltered profile and a bright inward-facing courtyard. Dark exterior timber contrasts with pale interiors, while the main lounge is arranged for long views of the changing sky.",
@@ -852,8 +847,8 @@ export const stays: Stay[] = [
     maxGuests: 2,
     bedrooms: 1,
     bathrooms: 1,
-    image: glampingTentImage,
-    gallery: [glampingTentImage, nordicGlassLodgeImage, forestCabinImage, mountainRetreatImage],
+    image: getStayCover("aurora-veil-glamping"),
+    gallery: getStayGallery("aurora-veil-glamping", "forest"),
     shortDescription: "An insulated dome suite with a heated floor and a private forest-side sauna.",
     description:
       "Aurora Veil Glamping is a fictional cold-season dome built for two. The transparent roof section sits above a proper upholstered bed, while a separate timber pod contains the bathroom and a small private sauna.",
@@ -893,8 +888,8 @@ export const stays: Stay[] = [
     maxGuests: 6,
     bedrooms: 3,
     bathrooms: 2,
-    image: lakeAframeImage,
-    gallery: [lakeAframeImage, nordicGlassLodgeImage, glampingTentImage, forestCabinImage],
+    image: getStayCover("blue-hour-lakehouse"),
+    gallery: getStayGallery("blue-hour-lakehouse", "lake"),
     shortDescription: "A quiet lakehouse with a wood-fired sauna, sheltered dock, and generous family kitchen.",
     description:
       "Blue Hour Lakehouse is a fictional waterside home designed around an easy rhythm between sauna, dock, and kitchen. Three compact bedrooms leave more room for a generous communal space, and the sheltered dock includes built-in seating.",
@@ -934,8 +929,8 @@ export const stays: Stay[] = [
     maxGuests: 8,
     bedrooms: 4,
     bathrooms: 3,
-    image: mountainRetreatImage,
-    gallery: [mountainRetreatImage, forestCabinImage, nordicGlassLodgeImage, coastalEcoCabinImage],
+    image: getStayCover("eagle-pass-retreat"),
+    gallery: getStayGallery("eagle-pass-retreat", "mountain"),
     shortDescription: "A contemporary mountain retreat with a sunken hearth and dedicated gear workshop.",
     description:
       "Eagle Pass Retreat is a fictional group house built for guests who arrive with serious outdoor plans. A ventilated workshop stores and dries equipment, while the sunken hearth and long dining room give the evenings a relaxed social center.",
@@ -975,8 +970,8 @@ export const stays: Stay[] = [
     maxGuests: 3,
     bedrooms: 1,
     bathrooms: 1,
-    image: nordicGlassLodgeImage,
-    gallery: [nordicGlassLodgeImage, lakeAframeImage, glampingTentImage, forestCabinImage],
+    image: getStayCover("birch-crown-treehouse"),
+    gallery: getStayGallery("birch-crown-treehouse", "lake"),
     shortDescription: "A light-filled birch treehouse with a window bench and cantilevered breakfast deck.",
     description:
       "Birch Crown Treehouse is a fictional elevated suite that uses pale timber and carefully placed windows to feel larger than its footprint. A deep window bench doubles as an extra sleeping place, and the breakfast deck projects toward the water view.",
