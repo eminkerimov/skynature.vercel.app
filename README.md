@@ -7,7 +7,7 @@ The project is a client-side product demo. Listings, reviews, editorial content,
 ## Features
 
 - Editorial home page with destination search, stay categories, featured stays, destinations, trust points, guest notes, and clear calls to action.
-- About page with contrasting light/dark sections, animated photo panels linked to stay types, catalogue counts, and a responsive photo-and-text grid.
+- About page explaining the collection and how to choose a stay, with the shared SkyNature palette, animated photo links, catalogue counts, and a responsive photo-and-text grid. Comparison controls stay out of the About page while keeping the selection saved.
 - Explore catalogue with 30 typed stays, query search, multi-criteria filters, sorting, removable filter chips, pagination, and an empty state.
 - Filter and page state synchronized with `URLSearchParams`, including browser back/forward support.
 - Responsive desktop filter sidebar and keyboard-accessible mobile filter drawer.

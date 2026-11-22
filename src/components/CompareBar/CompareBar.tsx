@@ -14,7 +14,7 @@ export default function CompareBar() {
   const { ids, removeCompare, clearCompare, statusMessage, dismissStatus } = useCompare();
   const barRef = useRef<HTMLElement>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const visible = ids.length > 0 && pathname.replace(/\/+$/, "") !== "/compare";
+  const visible = ids.length > 0 && !["/compare", "/about"].includes(pathname.replace(/\/+$/, ""));
   useEffect(() => {
     if (!visible || !barRef.current) return;
     const bar = barRef.current;

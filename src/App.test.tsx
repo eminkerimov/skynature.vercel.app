@@ -63,7 +63,7 @@ describe("application routes", () => {
     await waitForPage("Saved stays");
     expect(screen.getByRole("heading", { name: selectedName })).toBeInTheDocument();
     await user.click(within(screen.getByRole("navigation", { name: "Primary navigation" })).getByRole("link", { name: "About" }));
-    await waitForPage("Less screen. More green.");
+    await waitForPage("Nature stays, all in one place.");
     expect(within(screen.getByRole("navigation", { name: "Primary navigation" })).getByRole("link", { name: "About" })).toHaveAttribute("aria-current", "page");
     expect(within(screen.getByRole("contentinfo")).getByRole("link", { name: "About SkyNature" })).toHaveAttribute("href", "/about");
     await user.click(screen.getByRole("link", { name: "Explore the collection" }));
@@ -77,7 +77,7 @@ describe("application routes", () => {
     ["/stays/mosswood-ridge-cabin", "Mosswood Ridge Cabin"],
     ["/saved", "Saved stays"],
     ["/compare", "Compare stays"],
-    ["/about", "Less screen. More green."],
+    ["/about", "Nature stays, all in one place."],
     ["/missing-page", "This trail ends here."],
   ])("renders %s", async (route, heading) => {
     renderRoute(route);

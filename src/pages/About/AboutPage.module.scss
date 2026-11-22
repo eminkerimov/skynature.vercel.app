@@ -1,23 +1,22 @@
 @use "../../styles/tokens" as *;
 
-$about-ink: #151915;
-$about-lime: #c4f34e;
-$about-muted: #62685f;
+$about-ink: $green-950;
+$about-accent: $green-300;
+$about-muted: $muted;
 
-.page { padding-top: 32px; background: #f8faf6; color: $about-ink; }
+.page { padding-top: 32px; background: $surface; color: $about-ink; }
 .container { @include container; }
 .eyebrow { display: inline-flex; align-items: center; gap: 9px; font-size: 0.65rem; font-weight: 700; line-height: 1.6; letter-spacing: 0.1em; text-transform: uppercase; }
 .eyebrow > span,
-.greenDot { display: inline-block; flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%; background: #458128; }
+.greenDot { display: inline-block; flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%; background: $green-700; }
 .topLine { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
-.edition { color: $about-muted; font-size: 0.68rem; }
-.heroIntro { display: grid; grid-template-columns: 1.6fr 1fr; align-items: end; gap: 60px; padding: 34px 0 32px; }
-.hero h1 { margin: 0; font-size: clamp(4rem, 7.1vw, 6.5rem); font-weight: 800; line-height: 0.98; letter-spacing: -0.045em; }
-.hero h1 > span { display: block; width: fit-content; color: #43852b; }
-.heroCopy { max-width: 330px; justify-self: end; padding-bottom: 4px; }
-.heroCopy > p { margin: 0 0 22px; color: $about-muted; font-size: 0.87rem; line-height: 1.85; }
+.heroIntro { display: grid; grid-template-columns: 1.35fr 1fr; align-items: center; gap: 72px; padding: 36px 0 38px; }
+.hero h1 { margin: 0; font-size: clamp(2.9rem, 4.5vw, 4.15rem); font-weight: 700; line-height: 1.13; letter-spacing: -0.02em; }
+.hero h1 > span { display: block; color: $green-700; }
+.heroCopy { max-width: 450px; justify-self: end; }
+.heroCopy > p { margin: 0 0 20px; color: $about-muted; font-size: 0.9rem; line-height: 1.85; }
 .primaryLink { display: inline-flex; align-items: center; gap: 25px; min-height: 48px; padding: 6px 7px 6px 20px; border-radius: 99px; background: $about-ink; color: $white; font-size: 0.76rem; font-weight: 700; }
-.primaryLink > span { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: $about-lime; color: $about-ink; transition: transform 180ms ease; }
+.primaryLink > span { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: rgba($white, 0.13); color: $white; transition: transform 180ms ease; }
 .primaryLink:hover > span { transform: rotate(45deg); }
 .sceneDeck { display: flex; gap: 14px; height: 300px; }
 .scene { position: relative; display: block; flex: 1; min-width: 0; padding: 0; overflow: hidden; isolation: isolate; border: 0; border-radius: 19px; background: #263325; color: $white; text-align: left; transition: flex 550ms cubic-bezier(0.22, 0.68, 0.3, 1); }
@@ -30,9 +29,9 @@ $about-muted: #62685f;
 .sceneTop { position: absolute; top: 20px; right: 20px; left: 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .sceneTop > span { font-size: 0.55rem; font-weight: 700; letter-spacing: 0.08em; }
 .sceneTop > svg { box-sizing: content-box; padding: 8px; border: 1px solid rgba($white, 0.45); border-radius: 50%; transition: color 220ms ease, background 220ms ease, border-color 220ms ease; }
-.activeScene .sceneTop > svg { border-color: $about-lime; background: $about-lime; color: $about-ink; }
+.activeScene .sceneTop > svg { border-color: $white; background: $white; color: $about-ink; }
 .sceneCaption { position: absolute; right: 24px; bottom: 24px; left: 24px; display: grid; gap: 8px; }
-.sceneCaption strong { font-size: clamp(1.2rem, 2vw, 1.65rem); line-height: 1.12; letter-spacing: -0.045em; }
+.sceneCaption strong { font-size: clamp(1.2rem, 2vw, 1.65rem); line-height: 1.2; letter-spacing: -0.02em; }
 .sceneCaption > span { color: rgba($white, 0.85); font-size: 0.68rem; line-height: 1.6; }
 .heroBottom { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 21px 0 36px; color: $about-muted; font-size: 0.65rem; line-height: 1.6; }
 .heroBottom > span,
@@ -42,21 +41,21 @@ $about-muted: #62685f;
 
 .story { padding-block: 72px; background: $about-ink; color: $white; scroll-margin-top: var(--header-height); }
 .storyLayout { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 100px; }
-.storyHeading > .eyebrow { color: $about-lime; }
-.story h2 { margin: 26px 0 0; font-size: clamp(2rem, 3.5vw, 3.1rem); line-height: 1.12; letter-spacing: -0.055em; }
-.story h2 > span { color: #a7afa3; }
+.storyHeading > .eyebrow { color: $about-accent; }
+.story h2 { margin: 26px 0 0; font-size: clamp(2rem, 3.5vw, 3.1rem); line-height: 1.18; letter-spacing: -0.025em; }
+.story h2 > span { color: #d0dfcf; }
 .storyCopy { padding-top: 36px; }
 .storyCopy > p { margin-bottom: 22px; color: #b8c0b4; font-size: 0.83rem; line-height: 1.95; }
 .storyCopy > .storyLead { max-width: 400px; color: $white; font-size: 1.13rem; line-height: 1.6; }
 .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; padding-top: 24px; margin: 30px 0 0; border-top: 1px solid #383f35; }
 .stats > div { display: flex; flex-direction: column-reverse; gap: 9px; }
 .stats dt { color: #b8c0b4; font-size: 0.6rem; line-height: 1.65; }
-.stats dd { margin: 0; color: $about-lime; font-size: 2.65rem; font-weight: 700; line-height: 1; letter-spacing: -0.07em; }
+.stats dd { margin: 0; color: $white; font-size: 2.65rem; font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
 
 .approach { padding-block: 75px; }
 .sectionHeader { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-bottom: 32px; }
 .sectionHeader .eyebrow { color: $about-muted; }
-.sectionHeader h2 { margin: 20px 0 0; font-size: clamp(2.2rem, 3.8vw, 3.4rem); line-height: 1.05; letter-spacing: -0.06em; }
+.sectionHeader h2 { margin: 20px 0 0; font-size: clamp(2rem, 3.2vw, 2.8rem); line-height: 1.16; letter-spacing: -0.025em; }
 .sectionHeader > p { margin: 0 0 3px; color: $about-muted; font-size: 0.82rem; line-height: 1.85; }
 .bento { display: grid; grid-template-columns: 1.1fr 1fr; gap: 18px; }
 .bento article { min-width: 0; overflow: hidden; border-radius: 22px; }
@@ -69,7 +68,7 @@ $about-muted: #62685f;
 .photoTag { position: absolute; top: 24px; left: 24px; display: inline-flex; align-items: center; gap: 7px; padding: 9px 12px; border-radius: 99px; background: $white; color: $about-ink; font-size: 0.6rem; font-weight: 700; }
 .placeContent { position: absolute; right: 32px; bottom: 32px; left: 32px; }
 .placeContent > span { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; }
-.bento h3 { font-size: clamp(1.6rem, 2.3vw, 2.2rem); line-height: 1.12; letter-spacing: -0.05em; }
+.bento h3 { font-size: clamp(1.6rem, 2.3vw, 2.2rem); line-height: 1.2; letter-spacing: -0.025em; }
 .placeContent h3 { margin: 20px 0 18px; font-size: clamp(2.4rem, 4vw, 3.6rem); }
 .bento p { font-size: 0.78rem; line-height: 1.85; }
 .placeContent p { margin: 0; color: rgba($white, 0.9); }
@@ -81,8 +80,8 @@ $about-muted: #62685f;
 .detailCard > p { max-width: 400px; margin-bottom: 22px; color: $about-muted; }
 .detailList { display: grid; gap: 11px; padding: 0; margin: 0; list-style: none; }
 .detailList li { display: flex; align-items: center; gap: 9px; font-size: 0.67rem; line-height: 1.5; }
-.detailList svg { flex-shrink: 0; color: #43852b; }
-.shortlistCard { padding: 28px 30px; background: $about-lime; }
+.detailList svg { flex-shrink: 0; color: $green-700; }
+.shortlistCard { padding: 28px 30px; background: $warm; }
 .shortlistCard > p { max-width: 400px; margin-bottom: 20px; }
 .shortlistActions { display: flex; flex-wrap: wrap; gap: 10px; }
 .shortlistActions a { display: inline-flex; align-items: center; gap: 24px; min-height: 42px; padding: 9px 13px; border: 1px solid rgba($about-ink, 0.3); border-radius: 10px; font-size: 0.67rem; font-weight: 700; transition: background 180ms ease; }
@@ -90,16 +89,16 @@ $about-muted: #62685f;
 
 .cta { display: flex; align-items: flex-end; justify-content: space-between; gap: 35px; padding: 42px 0 44px; border-top: 1px solid #dfe5d9; }
 .cta .eyebrow { color: $about-muted; }
-.cta h2 { margin: 24px 0 0; font-size: clamp(2.7rem, 5vw, 4.4rem); line-height: 1.03; letter-spacing: -0.06em; }
-.cta h2 span { color: #43852b; }
+.cta h2 { margin: 24px 0 0; font-size: clamp(2.5rem, 4.4vw, 3.8rem); line-height: 1.13; letter-spacing: -0.025em; }
+.cta h2 span { color: $green-700; }
 .collectionLink { display: flex; flex-direction: column-reverse; align-items: flex-end; gap: 22px; padding-bottom: 4px; font-size: 0.8rem; font-weight: 700; white-space: nowrap; }
-.collectionLink > svg { box-sizing: content-box; width: 42px; height: 42px; padding: 20px; border-radius: 50%; background: $about-ink; color: $about-lime; transition: transform 220ms ease; }
+.collectionLink > svg { box-sizing: content-box; width: 42px; height: 42px; padding: 20px; border-radius: 50%; background: $about-ink; color: $white; transition: transform 220ms ease; }
 .collectionLink:hover > svg { transform: translate(4px, -4px); }
 .demoNote { padding-top: 8px; margin-bottom: 0; color: $about-muted; font-size: 0.64rem; line-height: 1.8; }
 
 @media (max-width: 1000px) {
   .heroIntro { grid-template-columns: 1.4fr 1fr; gap: 35px; }
-  .hero h1 { font-size: clamp(3.6rem, 7.5vw, 5rem); }
+  .hero h1 { font-size: clamp(2.7rem, 4.8vw, 3.55rem); }
   .sceneDeck { height: 285px; }
   .sceneTop { top: 16px; right: 16px; left: 16px; }
   .sceneCaption { right: 18px; bottom: 20px; left: 18px; }
@@ -112,7 +111,7 @@ $about-muted: #62685f;
 @media (max-width: 760px) {
   .page { padding-top: 26px; }
   .heroIntro { grid-template-columns: 1fr; gap: 24px; padding-top: 28px; }
-  .hero h1 { font-size: clamp(3.5rem, 10.7vw, 5rem); }
+  .hero h1 { font-size: clamp(2.7rem, 5.7vw, 3rem); }
   .heroCopy { display: flex; align-items: center; justify-content: space-between; gap: 28px; width: 100%; max-width: none; justify-self: start; }
   .heroCopy > p { max-width: 320px; margin: 0; font-size: 0.8rem; }
   .primaryLink { flex-shrink: 0; }
@@ -147,8 +146,7 @@ $about-muted: #62685f;
 }
 
 @media (max-width: 450px) {
-  .edition { display: none; }
-  .hero h1 { font-size: clamp(2.7rem, 13.6vw, 3.8rem); }
+  .hero h1 { font-size: clamp(2.1rem, 8.6vw, 2.55rem); }
   .heroIntro { padding-bottom: 25px; }
   .heroCopy { align-items: flex-start; flex-direction: column; gap: 17px; }
   .heroCopy > p { max-width: 320px; font-size: 0.8rem; }

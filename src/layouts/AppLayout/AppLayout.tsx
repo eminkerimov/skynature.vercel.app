@@ -9,7 +9,7 @@ import styles from "./AppLayout.module.scss";
 export default function AppLayout() {
   const { pathname } = useLocation();
   const { ids } = useCompare();
-  const compareVisible = ids.length > 0 && pathname.replace(/\/+$/, "") !== "/compare";
+  const compareVisible = ids.length > 0 && !["/compare", "/about"].includes(pathname.replace(/\/+$/, ""));
   return (
     <div className={`${styles.app} ${compareVisible ? styles.compareSpace : ""} ${pathname.startsWith("/stays/") ? styles.bookingSpace : ""}`}>
       <ScrollToTop />
