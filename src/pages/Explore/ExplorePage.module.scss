@@ -273,58 +273,6 @@
   margin-top: 48px;
 }
 
-.skeleton {
-  min-width: 0;
-  overflow: hidden;
-  border: 1px solid rgba($line, 0.85);
-  border-radius: $radius-md;
-  background: $white;
-}
-
-.skeletonImage,
-.skeletonShortLine,
-.skeletonLongLine,
-.skeletonMediumLine {
-  background: linear-gradient(
-    90deg,
-    #e8ede6 20%,
-    #f5f7f2 45%,
-    #e8ede6 70%
-  );
-  background-size: 220% 100%;
-  animation: shimmer 1.35s ease-in-out infinite;
-}
-
-.skeletonImage {
-  aspect-ratio: 4 / 3;
-}
-
-.skeletonBody {
-  display: grid;
-  gap: 11px;
-  padding: 17px;
-}
-
-.skeletonShortLine,
-.skeletonLongLine,
-.skeletonMediumLine {
-  height: 11px;
-  border-radius: 999px;
-}
-
-.skeletonShortLine {
-  width: 38%;
-}
-
-.skeletonLongLine {
-  width: 88%;
-  height: 16px;
-}
-
-.skeletonMediumLine {
-  width: 64%;
-}
-
 .emptyState {
   display: grid;
   min-height: 460px;
@@ -375,16 +323,6 @@
   background: rgba($green-300, 0.25);
   color: $green-700;
   place-items: center;
-}
-
-@keyframes shimmer {
-  from {
-    background-position: 100% 0;
-  }
-
-  to {
-    background-position: -100% 0;
-  }
 }
 
 @media (max-width: 1120px) {

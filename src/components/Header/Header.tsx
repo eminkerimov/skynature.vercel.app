@@ -2,17 +2,14 @@ import { useEffect, useState } from "react";
 import { Heart, Menu, X } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import Brand from "../Brand/Brand";
+import { useProjectData } from "../../context/ProjectDataContext";
 import { useFavorites } from "../../hooks/useFavorites";
 import styles from "./Header.module.scss";
-
-const links = [
-  { to: "/", label: "Home", end: true },
-  { to: "/explore", label: "Explore", end: false },
-];
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const { ids } = useFavorites();
+  const { site } = useProjectData();
   const location = useLocation();
 
   useEffect(() => setOpen(false), [location.pathname]);
@@ -37,7 +34,7 @@ export default function Header() {
           className={`${styles.navigation} ${open ? styles.open : ""}`}
         >
           <div className={styles.links}>
-            {links.map((link) => (
+            {site.navigation.header.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
@@ -51,14 +48,14 @@ export default function Header() {
             ))}
           </div>
           <NavLink
-            to="/saved"
+            to={site.navigation.saved.href}
             className={({ isActive }) =>
               `${styles.saved} ${isActive ? styles.savedActive : ""}`
             }
-            aria-label={`Saved stays${ids.length ? `, ${ids.length} items` : ""}`}
+            aria-label={`${site.navigation.saved.label} stays${ids.length ? `, ${ids.length} items` : ""}`}
           >
             <Heart size={18} aria-hidden="true" />
-            <span>Saved</span>
+            <span>{site.navigation.saved.label}</span>
             {ids.length > 0 && <span className={styles.count}>{ids.length}</span>}
           </NavLink>
         </nav>

@@ -1,11 +1,19 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { stays } from "../../data/stays";
+import { ProjectDataTestProvider, projectData } from "../../test/projectData";
 import { formatCurrency } from "../../utils/formatters";
 import BookingModal from "./BookingModal";
 
-const stay = stays[0];
+const stay = projectData.stays[0];
+
+function renderBooking(data = projectData) {
+  return render(
+    <ProjectDataTestProvider data={data}>
+      <BookingModal stay={stay} open onClose={vi.fn()} />
+    </ProjectDataTestProvider>,
+  );
+}
 
 function dateFromToday(offset: number) {
   const date = new Date(`${new Date().toISOString().slice(0, 10)}T00:00:00Z`);
@@ -40,12 +48,8 @@ async function completeValidForm() {
     screen.getByLabelText("Guests"),
     String(details.guests),
   );
-  fireEvent.input(screen.getByLabelText("Name"), {
-    target: { value: "Alex Morgan" },
-  });
-  fireEvent.input(screen.getByLabelText("Email"), {
-    target: { value: "alex@example.com" },
-  });
+  await user.type(screen.getByLabelText("Name"), "Alex Morgan");
+  await user.type(screen.getByLabelText("Email"), "alex@example.com");
 
   return { user, ...details };
 }
@@ -53,7 +57,7 @@ async function completeValidForm() {
 describe("BookingModal", () => {
   it("shows validation errors after submitting an empty form", async () => {
     const user = userEvent.setup();
-    render(<BookingModal stay={stay} open onClose={vi.fn()} />);
+    renderBooking();
 
     await user.click(screen.getByRole("button", { name: "Request booking" }));
 
@@ -63,8 +67,25 @@ describe("BookingModal", () => {
     expect(screen.getByText("Enter a valid email address.")).toBeInTheDocument();
   });
 
+  it("keeps focus in name and email while typing each character", async () => {
+    const user = userEvent.setup();
+    renderBooking();
+    const nameInput = screen.getByLabelText("Name");
+    const emailInput = screen.getByLabelText("Email");
+
+    await user.type(nameInput, "Alex Morgan");
+
+    expect(nameInput).toHaveValue("Alex Morgan");
+    expect(nameInput).toHaveFocus();
+
+    await user.type(emailInput, "alex@example.com");
+
+    expect(emailInput).toHaveValue("alex@example.com");
+    expect(emailInput).toHaveFocus();
+  });
+
   it("calculates the total for valid booking details", async () => {
-    render(<BookingModal stay={stay} open onClose={vi.fn()} />);
+    renderBooking();
     const { checkIn, checkOut, guests, nights } = await completeValidForm();
     const subtotal = nights * stay.price;
     const expectedTotal = subtotal + 45 + Math.round(subtotal * 0.12);
@@ -81,8 +102,37 @@ describe("BookingModal", () => {
     ).toBeInTheDocument();
   });
 
+  it("uses booking defaults, fees, locale, and currency from project data", async () => {
+    const data = {
+      ...projectData,
+      settings: {
+        ...projectData.settings,
+        locale: "de-DE",
+        currency: "EUR",
+        booking: {
+          cleaningFee: 27,
+          serviceFeeRate: 0.2,
+          defaultGuests: 1,
+        },
+      },
+    };
+    renderBooking(data);
+    expect(screen.getByLabelText("Guests")).toHaveValue("1");
+
+    const { nights } = await completeValidForm();
+    const subtotal = nights * stay.price;
+    const expectedTotal = subtotal + 27 + Math.round(subtotal * 0.2);
+    const formattedTotal = new Intl.NumberFormat("de-DE", {
+      style: "currency",
+      currency: "EUR",
+      maximumFractionDigits: 0,
+    }).format(expectedTotal);
+
+    expect(screen.getByText("Total").parentElement?.textContent).toBe(`Total${formattedTotal}`);
+  });
+
   it("shows the success state and demo payment note after a valid submission", async () => {
-    render(<BookingModal stay={stay} open onClose={vi.fn()} />);
+    renderBooking();
     const { user } = await completeValidForm();
 
     await user.click(screen.getByRole("button", { name: "Request booking" }));

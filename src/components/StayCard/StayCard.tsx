@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import type { Stay } from "../../types/stay";
 import { formatCurrency } from "../../utils/formatters";
 import { useFavorites } from "../../hooks/useFavorites";
+import { useProjectData } from "../../context/ProjectDataContext";
 import Badge from "../Badge/Badge";
 import styles from "./StayCard.module.scss";
 
@@ -11,6 +12,7 @@ interface StayCardProps {
 }
 
 export default function StayCard({ stay }: StayCardProps) {
+  const { settings, images } = useProjectData();
   const { isFavorite, toggleFavorite } = useFavorites();
   const saved = isFavorite(stay.id);
 
@@ -18,7 +20,7 @@ export default function StayCard({ stay }: StayCardProps) {
     <article className={styles.card}>
       <div className={styles.media}>
         <Link to={`/stays/${stay.slug}`} aria-label={`View ${stay.name}`}>
-          <img src={stay.image} alt={`${stay.name} in ${stay.location}`} loading="lazy" />
+          <img src={stay.image} alt={images.find((image) => image.url === stay.image)?.alt ?? `${stay.name} in ${stay.location}`} loading="lazy" />
         </Link>
         <div className={styles.badge}>
           <Badge>{stay.type}</Badge>
@@ -54,7 +56,7 @@ export default function StayCard({ stay }: StayCardProps) {
             Up to {stay.maxGuests}
           </span>
           <p className={styles.price}>
-            <strong>{formatCurrency(stay.price)}</strong>
+            <strong>{formatCurrency(stay.price, settings.locale, settings.currency)}</strong>
             <span> / night</span>
           </p>
         </div>

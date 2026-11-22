@@ -34,11 +34,6 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
     }, 0);
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-        return;
-      }
-
       if (event.key !== "Tab" || !dialogRef.current) return;
       const items = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(focusableSelector));
       if (!items.length) return;
@@ -61,6 +56,17 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
       document.removeEventListener("keydown", handleKeyDown);
       previouslyFocused?.focus();
     };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [open, onClose]);
 
   if (!open) return null;

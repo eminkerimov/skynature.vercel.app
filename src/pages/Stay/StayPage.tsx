@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Activity,
   Bath,
@@ -16,7 +16,7 @@ import {
   Users,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { stays } from "../../data/stays";
+import { useProjectData } from "../../context/ProjectDataContext";
 import { useFavorites } from "../../hooks/useFavorites";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import { formatCurrency, formatDate } from "../../utils/formatters";
@@ -27,9 +27,14 @@ import styles from "./StayPage.module.scss";
 
 export default function StayPage() {
   const { slug } = useParams();
+  const { stays, images, settings } = useProjectData();
   const stay = stays.find((item) => item.slug === slug);
   const [bookingOpen, setBookingOpen] = useState(false);
   const { isFavorite, toggleFavorite } = useFavorites();
+  const imageAlts = useMemo(
+    () => new Map(images.map((image) => [image.url, image.alt])),
+    [images],
+  );
   useDocumentTitle(stay?.name ?? "Stay not found");
 
   if (!stay) {
@@ -81,7 +86,7 @@ export default function StayPage() {
             <figure key={`${image}-${index}`}>
               <img
                 src={image}
-                alt={`${stay.name} ${index === 0 ? "exterior" : `gallery view ${index + 1}`}`}
+                alt={imageAlts.get(image) ?? `${stay.name} ${index === 0 ? "exterior" : `gallery view ${index + 1}`}`}
                 loading={index === 0 ? "eager" : "lazy"}
               />
             </figure>
@@ -162,7 +167,7 @@ export default function StayPage() {
               <div className={styles.reviews}>
                 {stay.reviews.map((review) => (
                   <article key={review.id}>
-                    <div><span>{review.author.charAt(0)}</span><p><strong>{review.author}</strong><small>{formatDate(review.date)}</small></p></div>
+                    <div><span>{review.author.charAt(0)}</span><p><strong>{review.author}</strong><small>{formatDate(review.date, settings.locale)}</small></p></div>
                     <div className={styles.reviewStars} aria-label={`${review.rating} stars`}>{Array.from({ length: review.rating }, (_, index) => <Star key={index} size={13} fill="currentColor" aria-hidden="true" />)}</div>
                     <blockquote>“{review.comment}”</blockquote>
                   </article>
@@ -172,7 +177,7 @@ export default function StayPage() {
           </div>
 
           <aside className={styles.bookingCard} aria-label="Booking summary">
-            <div className={styles.bookingPrice}><span>From</span><p><strong>{formatCurrency(stay.price)}</strong> / night</p></div>
+            <div className={styles.bookingPrice}><span>From</span><p><strong>{formatCurrency(stay.price, settings.locale, settings.currency)}</strong> / night</p></div>
             <div className={styles.bookingFacts}>
               <span><CalendarCheck size={18} aria-hidden="true" />Minimum {stay.stayInfo.minimumNights} nights</span>
               <span><ShieldCheck size={18} aria-hidden="true" />Flexible cancellation</span>
@@ -187,7 +192,7 @@ export default function StayPage() {
           <div className={styles.relatedGrid}>{related.map((item) => <StayCard key={item.id} stay={item} />)}</div>
         </section>
       </main>
-      <BookingModal stay={stay} open={bookingOpen} onClose={() => setBookingOpen(false)} />
+      <BookingModal key={stay.id} stay={stay} open={bookingOpen} onClose={() => setBookingOpen(false)} />
     </>
   );
 }

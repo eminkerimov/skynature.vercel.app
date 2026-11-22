@@ -15,116 +15,43 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import forestRiverImage from "../../assets/images/landscapes/forest-river.webp";
-import lakesideJettyImage from "../../assets/images/landscapes/lakeside-jetty.webp";
-import mistyWoodlandImage from "../../assets/images/landscapes/misty-woodland.webp";
-import mountainValleyImage from "../../assets/images/landscapes/mountain-valley.webp";
 import Badge from "../../components/Badge/Badge";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import StayCard from "../../components/StayCard/StayCard";
-import { categories, destinations, stays } from "../../data/stays";
+import { useProjectData } from "../../context/ProjectDataContext";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
-import type { StayType } from "../../types/stay";
 import styles from "./HomePage.module.scss";
 
-interface CategoryDetail {
-  icon: LucideIcon;
-  description: string;
-}
-
-const categoryDetails: Record<StayType, CategoryDetail> = {
-  Cabin: {
-    icon: TreePine,
-    description: "Warm timber hideaways tucked into quiet landscapes.",
-  },
-  "Eco home": {
-    icon: House,
-    description: "Considered homes shaped around lighter-impact living.",
-  },
-  Glamping: {
-    icon: Tent,
-    description: "Immersive outdoor stays with the comforts that matter.",
-  },
-  Lakeside: {
-    icon: Waves,
-    description: "Calm waterside places made for unhurried mornings.",
-  },
-  "Mountain retreat": {
-    icon: Mountain,
-    description: "High-country bases with space to rest and reconnect.",
-  },
-  Treehouse: {
-    icon: Trees,
-    description: "Elevated escapes with a closer view of the canopy.",
-  },
+const homeIcons: Record<string, LucideIcon> = {
+  CalendarCheck,
+  Heart,
+  House,
+  Leaf,
+  Mountain,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  Tent,
+  TreePine,
+  Trees,
+  Waves,
 };
 
-const destinationVisuals = [
-  {
-    region: "Scottish Highlands",
-    image: forestRiverImage,
-    alt: "A quiet river winding through a dense green forest",
-  },
-  {
-    region: "Dolomites",
-    image: mountainValleyImage,
-    alt: "A green valley beneath dramatic mountain cliffs",
-  },
-  {
-    region: "Finnish Lakeland",
-    image: lakesideJettyImage,
-    alt: "A wooden jetty reaching into a still mountain lake",
-  },
-  {
-    region: "Black Forest",
-    image: mistyWoodlandImage,
-    alt: "A peaceful bench beneath trees in a misty woodland",
-  },
-].filter(({ region }) => destinations.includes(region));
-
-const benefits = [
-  {
-    icon: Leaf,
-    title: "Nature-first stays",
-    copy: "Places selected for their setting, thoughtful footprint, and sense of calm.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Details you can trust",
-    copy: "Clear amenities, house information, guest limits, and pricing before you book.",
-  },
-  {
-    icon: Sparkles,
-    title: "Spaces with character",
-    copy: "Independent cabins, retreats, and hideaways that feel personal rather than generic.",
-  },
-];
-
-const steps = [
-  {
-    icon: Search,
-    number: "01",
-    title: "Find your setting",
-    copy: "Search by destination, dates, and the kind of landscape you want around you.",
-  },
-  {
-    icon: Heart,
-    number: "02",
-    title: "Keep the good ones",
-    copy: "Save standout stays and return to your shortlist whenever inspiration strikes.",
-  },
-  {
-    icon: CalendarCheck,
-    number: "03",
-    title: "Book with clarity",
-    copy: "Review the full stay details, see your total, and confirm in a few simple steps.",
-  },
-];
+function resolveHomeIcon(name: string): LucideIcon {
+  return Object.hasOwn(homeIcons, name) ? homeIcons[name] : Leaf;
+}
 
 export function HomePage() {
   useDocumentTitle("Home");
+  const { stays, categories, destinations, home, site, numbers, settings } = useProjectData();
 
-  const featuredStays = stays.filter((stay) => stay.featured).slice(0, 4);
+  const featuredStays = stays
+    .filter((stay) => stay.featured)
+    .slice(0, home.sections.featured.limit);
+  const destinationVisuals = home.destinationVisuals.filter(({ region }) =>
+    destinations.includes(region),
+  );
+  const numberFormatter = new Intl.NumberFormat(settings.locale);
 
   return (
     <main className={styles.page}>
@@ -133,23 +60,20 @@ export function HomePage() {
           <div className={styles.heroFrame}>
             <img
               className={styles.heroImage}
-              src={forestRiverImage}
-              alt="A tranquil river flowing through an old green forest"
+              src={home.hero.image}
+              alt={home.hero.alt}
             />
             <div className={styles.heroShade} aria-hidden="true" />
             <div className={styles.heroContent}>
               <div className={styles.heroBadge}>
-                <Badge>Thoughtful stays, closer to nature</Badge>
+                <Badge>{home.hero.badge}</Badge>
               </div>
-              <h1 id="home-hero-title">Find your place in nature</h1>
-              <p>
-                Discover characterful cabins, eco homes, and secluded retreats
-                made for slower days outside.
-              </p>
-              <div className={styles.heroMeta} aria-label="SkyNature collection">
-                <span>{stays.length} handpicked stays</span>
+              <h1 id="home-hero-title">{home.hero.title}</h1>
+              <p>{home.hero.description}</p>
+              <div className={styles.heroMeta} aria-label={`${site.name} collection`}>
+                <span>{numberFormatter.format(numbers.stays)} handpicked stays</span>
                 <span aria-hidden="true" />
-                <span>{destinations.length} remarkable regions</span>
+                <span>{numberFormatter.format(numbers.regions)} remarkable regions</span>
               </div>
               <div className={styles.searchPanel}>
                 <SearchBar />
@@ -163,19 +87,16 @@ export function HomePage() {
         <div className={styles.container}>
           <div className={styles.sectionIntro}>
             <div>
-              <span className={styles.kicker}>Stay your way</span>
-              <h2 id="categories-title">A different rhythm for every escape</h2>
+              <span className={styles.kicker}>{home.sections.categories.eyebrow}</span>
+              <h2 id="categories-title">{home.sections.categories.title}</h2>
             </div>
-            <p>
-              From a simple forest cabin to a considered mountain house, choose
-              the space that fits the way you want to switch off.
-            </p>
+            <p>{home.sections.categories.description}</p>
           </div>
 
           <ul className={styles.categoryGrid}>
             {categories.map((category) => {
-              const detail = categoryDetails[category];
-              const Icon = detail.icon;
+              const detail = home.categoryDetails[category];
+              const Icon = resolveHomeIcon(detail.icon);
 
               return (
                 <li key={category}>
@@ -201,11 +122,11 @@ export function HomePage() {
         <div className={styles.container}>
           <div className={styles.sectionHeadingRow}>
             <div>
-              <span className={styles.kicker}>Selected for you</span>
-              <h2 id="featured-title">Featured stays</h2>
+              <span className={styles.kicker}>{home.sections.featured.eyebrow}</span>
+              <h2 id="featured-title">{home.sections.featured.title}</h2>
             </div>
-            <Link className={styles.textLink} to="/explore">
-              Explore all stays
+            <Link className={styles.textLink} to={home.sections.featured.href}>
+              {home.sections.featured.linkLabel}
               <ArrowRight size={18} aria-hidden="true" />
             </Link>
           </div>
@@ -222,13 +143,10 @@ export function HomePage() {
         <div className={styles.container}>
           <div className={styles.sectionIntro}>
             <div>
-              <span className={styles.kicker}>Go somewhere memorable</span>
-              <h2 id="destinations-title">Popular destinations</h2>
+              <span className={styles.kicker}>{home.sections.destinations.eyebrow}</span>
+              <h2 id="destinations-title">{home.sections.destinations.title}</h2>
             </div>
-            <p>
-              Follow the landscape: deep woodland, open water, dramatic ridges,
-              and regions where the pace naturally softens.
-            </p>
+            <p>{home.sections.destinations.description}</p>
           </div>
 
           <div className={styles.destinationGrid}>
@@ -247,7 +165,7 @@ export function HomePage() {
                     <span>
                       <strong>{region}</strong>
                       <small>
-                        {stayCount} {stayCount === 1 ? "stay" : "stays"}
+                        {numberFormatter.format(stayCount)} {stayCount === 1 ? "stay" : "stays"}
                       </small>
                     </span>
                     <span className={styles.destinationArrow} aria-hidden="true">
@@ -265,30 +183,31 @@ export function HomePage() {
         <div className={styles.container}>
           <div className={styles.benefitsLayout}>
             <div className={styles.benefitsLead}>
-              <Badge>Why SkyNature</Badge>
-              <h2 id="benefits-title">Less noise. More of what brought you here.</h2>
-              <p>
-                We make it easier to compare distinctive nature stays without
-                losing the details that make each place worth the journey.
-              </p>
-              <Link className={styles.lightLink} to="/explore">
-                Start exploring
+              <Badge>{home.sections.benefits.eyebrow}</Badge>
+              <h2 id="benefits-title">{home.sections.benefits.title}</h2>
+              <p>{home.sections.benefits.description}</p>
+              <Link className={styles.lightLink} to={home.sections.benefits.href}>
+                {home.sections.benefits.linkLabel}
                 <ArrowRight size={18} aria-hidden="true" />
               </Link>
             </div>
 
             <ul className={styles.benefitsList}>
-              {benefits.map(({ icon: Icon, title, copy }) => (
-                <li key={title}>
-                  <span className={styles.benefitIcon} aria-hidden="true">
-                    <Icon size={24} strokeWidth={1.8} />
-                  </span>
-                  <span>
-                    <strong>{title}</strong>
-                    <p>{copy}</p>
-                  </span>
-                </li>
-              ))}
+              {home.benefits.map(({ icon, title, copy }) => {
+                const Icon = resolveHomeIcon(icon);
+
+                return (
+                  <li key={title}>
+                    <span className={styles.benefitIcon} aria-hidden="true">
+                      <Icon size={24} strokeWidth={1.8} />
+                    </span>
+                    <span>
+                      <strong>{title}</strong>
+                      <p>{copy}</p>
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
@@ -297,22 +216,26 @@ export function HomePage() {
       <section className={styles.howSection} aria-labelledby="how-title">
         <div className={styles.container}>
           <div className={styles.centeredHeading}>
-            <span className={styles.kicker}>Simple by design</span>
-            <h2 id="how-title">How it works</h2>
-            <p>From first idea to confirmed escape in three calm steps.</p>
+            <span className={styles.kicker}>{home.sections.steps.eyebrow}</span>
+            <h2 id="how-title">{home.sections.steps.title}</h2>
+            <p>{home.sections.steps.description}</p>
           </div>
 
           <ol className={styles.stepsGrid}>
-            {steps.map(({ icon: Icon, number, title, copy }) => (
-              <li key={number}>
-                <span className={styles.stepNumber}>{number}</span>
-                <span className={styles.stepIcon} aria-hidden="true">
-                  <Icon size={25} strokeWidth={1.8} />
-                </span>
-                <h3>{title}</h3>
-                <p>{copy}</p>
-              </li>
-            ))}
+            {home.steps.map(({ icon, number, title, copy }) => {
+              const Icon = resolveHomeIcon(icon);
+
+              return (
+                <li key={number}>
+                  <span className={styles.stepNumber}>{number}</span>
+                  <span className={styles.stepIcon} aria-hidden="true">
+                    <Icon size={25} strokeWidth={1.8} />
+                  </span>
+                  <h3>{title}</h3>
+                  <p>{copy}</p>
+                </li>
+              );
+            })}
           </ol>
         </div>
       </section>
@@ -321,35 +244,21 @@ export function HomePage() {
         <div className={styles.container}>
           <div className={styles.testimonialsLayout}>
             <div className={styles.testimonialsIntro}>
-              <span className={styles.kicker}>Guest notes</span>
-              <h2 id="stories-title">Small moments that stay with you</h2>
-              <p>
-                The best escapes are often remembered through a view, a quiet
-                morning, or the feeling of having nowhere else to be.
-              </p>
+              <span className={styles.kicker}>{home.sections.testimonials.eyebrow}</span>
+              <h2 id="stories-title">{home.sections.testimonials.title}</h2>
+              <p>{home.sections.testimonials.description}</p>
             </div>
 
             <div className={styles.quotesGrid}>
-              <figure>
-                <blockquote>
-                  “The cabin was beautifully considered, but it was the silence
-                  beyond the deck that made the weekend feel genuinely rare.”
-                </blockquote>
-                <figcaption>
-                  <span>MC</span>
-                  <strong>Maya C.</strong>
-                </figcaption>
-              </figure>
-              <figure>
-                <blockquote>
-                  “We saved three places, compared the details in one evening,
-                  and found exactly the kind of lakeside break we needed.”
-                </blockquote>
-                <figcaption>
-                  <span>ER</span>
-                  <strong>Elena R.</strong>
-                </figcaption>
-              </figure>
+              {home.testimonials.map(({ quote, author, initials }) => (
+                <figure key={author}>
+                  <blockquote>“{quote}”</blockquote>
+                  <figcaption>
+                    <span>{initials}</span>
+                    <strong>{author}</strong>
+                  </figcaption>
+                </figure>
+              ))}
             </div>
           </div>
         </div>
@@ -359,15 +268,12 @@ export function HomePage() {
         <div className={styles.container}>
           <div className={styles.ctaPanel}>
             <div>
-              <span>Ready when you are</span>
-              <h2 id="cta-title">Your next good story starts outdoors.</h2>
-              <p>
-                Browse the full collection and find a stay that gives you room
-                to breathe.
-              </p>
+              <span>{home.cta.eyebrow}</span>
+              <h2 id="cta-title">{home.cta.title}</h2>
+              <p>{home.cta.description}</p>
             </div>
-            <Link className={styles.ctaButton} to="/explore">
-              Find a stay
+            <Link className={styles.ctaButton} to={home.cta.href}>
+              {home.cta.label}
               <ArrowRight size={19} aria-hidden="true" />
             </Link>
           </div>

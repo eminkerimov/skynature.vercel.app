@@ -23,7 +23,7 @@ import {
   Users,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { destinations } from "../../data/stays";
+import { useProjectData } from "../../context/ProjectDataContext";
 import styles from "./SearchBar.module.scss";
 
 type ActiveControl = "destination" | "checkIn" | "checkOut" | "guests" | null;
@@ -99,6 +99,8 @@ function getCalendarCells(month: Date) {
 }
 
 export default function SearchBar() {
+  const { destinations, settings } = useProjectData();
+  const { minGuests, maxGuests, defaultGuests } = settings.search;
   const navigate = useNavigate();
   const searchRef = useRef<HTMLFormElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -116,7 +118,7 @@ export default function SearchBar() {
   const [destination, setDestination] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
-  const [guests, setGuests] = useState(2);
+  const [guests, setGuests] = useState(defaultGuests);
   const [activeControl, setActiveControl] = useState<ActiveControl>(null);
   const [activeSuggestion, setActiveSuggestion] = useState(0);
   const [viewMonth, setViewMonth] = useState(() => startOfMonth(today));
@@ -132,7 +134,7 @@ export default function SearchBar() {
     return destinations.filter((region) =>
       region.toLocaleLowerCase("en").includes(query),
     );
-  }, [destination]);
+  }, [destination, destinations]);
 
   const closePopover = useCallback((restoreFocus = false) => {
     setActiveControl(null);
@@ -575,14 +577,14 @@ export default function SearchBar() {
             <div className={styles.guestsMenu} role="dialog" aria-labelledby={guestsTitleId}>
               <div>
                 <h2 id={guestsTitleId}>Guests</h2>
-                <p>Up to 8 guests</p>
+                <p>Up to {maxGuests} guests</p>
               </div>
               <div className={styles.counter}>
                 <button
                   type="button"
                   aria-label="Remove one guest"
-                  disabled={guests === 1}
-                  onClick={() => setGuests((current) => Math.max(1, current - 1))}
+                  disabled={guests <= minGuests}
+                  onClick={() => setGuests((current) => Math.max(minGuests, current - 1))}
                 >
                   <Minus size={18} aria-hidden="true" />
                 </button>
@@ -590,8 +592,8 @@ export default function SearchBar() {
                 <button
                   type="button"
                   aria-label="Add one guest"
-                  disabled={guests === 8}
-                  onClick={() => setGuests((current) => Math.min(8, current + 1))}
+                  disabled={guests >= maxGuests}
+                  onClick={() => setGuests((current) => Math.min(maxGuests, current + 1))}
                 >
                   <Plus size={18} aria-hidden="true" />
                 </button>

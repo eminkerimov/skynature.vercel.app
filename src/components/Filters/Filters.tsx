@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { RotateCcw, Search, SlidersHorizontal, X } from "lucide-react";
 import type { StayFilterState } from "../../types/stay";
-import { categories } from "../../data/stays";
+import { useProjectData } from "../../context/ProjectDataContext";
+import { formatCurrency } from "../../utils/formatters";
 import styles from "./Filters.module.scss";
 
 interface ChangeOptions {
@@ -35,6 +36,9 @@ function FilterFields({
   amenities,
   onChange,
 }: FilterFieldsProps) {
+  const { categories, settings } = useProjectData();
+  const { priceBounds, priceStep, ratingOptions } = settings.catalog;
+
   const setValue = <Key extends keyof StayFilterState,>(
     key: Key,
     nextValue: StayFilterState[Key],
@@ -112,11 +116,11 @@ function FilterFields({
             <input
               id={idPrefix + "-min-price"}
               type="number"
-              min="120"
-              max="500"
-              step="10"
+              min={priceBounds.min}
+              max={priceBounds.max}
+              step={priceStep}
               inputMode="numeric"
-              placeholder="$120"
+              placeholder={formatCurrency(priceBounds.min, settings.locale, settings.currency)}
               value={value.minPrice ?? ""}
               onChange={(event) =>
                 setValue(
@@ -135,11 +139,11 @@ function FilterFields({
             <input
               id={idPrefix + "-max-price"}
               type="number"
-              min="120"
-              max="500"
-              step="10"
+              min={priceBounds.min}
+              max={priceBounds.max}
+              step={priceStep}
               inputMode="numeric"
-              placeholder="$500"
+              placeholder={formatCurrency(priceBounds.max, settings.locale, settings.currency)}
               value={value.maxPrice ?? ""}
               onChange={(event) =>
                 setValue(
@@ -166,9 +170,9 @@ function FilterFields({
           }
         >
           <option value="">Any rating</option>
-          <option value="4.5">4.5 and above</option>
-          <option value="4.7">4.7 and above</option>
-          <option value="4.9">4.9 and above</option>
+          {ratingOptions.map((rating) => (
+            <option key={rating} value={rating}>{rating.toFixed(1)} and above</option>
+          ))}
         </select>
       </div>
 

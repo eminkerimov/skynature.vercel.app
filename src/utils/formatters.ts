@@ -1,20 +1,18 @@
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
+const currencyFormatters = new Map<string, Intl.NumberFormat>();
+const dateFormatters = new Map<string, Intl.DateTimeFormat>();
 
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-  year: "numeric",
-});
+export const formatCurrency = (value: number, locale = "en-US", currency = "USD"): string => {
+  const key = `${locale}:${currency}`;
+  let formatter = currencyFormatters.get(key);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locale, { style: "currency", currency, maximumFractionDigits: 0 });
+    currencyFormatters.set(key, formatter);
+  }
+  return formatter.format(value);
+};
 
-export const formatCurrency = (value: number): string =>
-  currencyFormatter.format(value);
-
-export const formatNightlyPrice = (value: number): string =>
-  formatCurrency(value) + " / night";
+export const formatNightlyPrice = (value: number, locale = "en-US", currency = "USD"): string =>
+  formatCurrency(value, locale, currency) + " / night";
 
 export const pluralize = (
   count: number,
@@ -25,11 +23,17 @@ export const pluralize = (
 export const formatGuestCount = (count: number): string =>
   pluralize(count, "guest");
 
-export const formatDate = (value: string | Date): string => {
+export const formatDate = (value: string | Date, locale = "en-US"): string => {
   const date =
     typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)
       ? new Date(value + "T00:00:00")
       : new Date(value);
 
-  return Number.isNaN(date.getTime()) ? "" : dateFormatter.format(date);
+  if (Number.isNaN(date.getTime())) return "";
+  let formatter = dateFormatters.get(locale);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(locale, { month: "short", day: "numeric", year: "numeric" });
+    dateFormatters.set(locale, formatter);
+  }
+  return formatter.format(date);
 };

@@ -9,12 +9,7 @@ import { useSearchParams } from "react-router-dom";
 import Filters from "../../components/Filters/Filters";
 import Pagination from "../../components/Pagination/Pagination";
 import StayCard from "../../components/StayCard/StayCard";
-import {
-  allAmenities,
-  categories,
-  destinations,
-  stays,
-} from "../../data/stays";
+import { useProjectData } from "../../context/ProjectDataContext";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import type {
   StayFilterState,
@@ -28,8 +23,6 @@ import {
 } from "../../utils/stayFilters";
 import styles from "./ExplorePage.module.scss";
 
-const ITEMS_PER_PAGE = 9;
-const LOADING_DELAY = 350;
 const VALID_SORTS: StaySort[] = [
   "rating-desc",
   "price-asc",
@@ -57,10 +50,20 @@ const parseOptionalNumber = (
   return parsed;
 };
 
-const readFilters = (params: URLSearchParams): StayFilterState => {
+interface FilterOptions {
+  categories: readonly StayType[];
+  destinations: readonly string[];
+  allAmenities: readonly string[];
+  defaultSort: StaySort;
+}
+
+const readFilters = (
+  params: URLSearchParams,
+  { categories, destinations, allAmenities, defaultSort }: FilterOptions,
+): StayFilterState => {
   const typeParam = params.get("type") ?? "";
   const regionParam = params.get("region") ?? "";
-  const sortParam = params.get("sort") ?? DEFAULT_STAY_FILTERS.sort;
+  const sortParam = params.get("sort") ?? defaultSort;
   const amenityParams = (params.get("amenities") ?? "")
     .split(",")
     .map((amenity) => amenity.trim())
@@ -81,7 +84,7 @@ const readFilters = (params: URLSearchParams): StayFilterState => {
     amenities: amenityParams,
     sort: VALID_SORTS.includes(sortParam as StaySort)
       ? (sortParam as StaySort)
-      : DEFAULT_STAY_FILTERS.sort,
+      : defaultSort,
   };
 };
 
@@ -93,8 +96,12 @@ const readPage = (params: URLSearchParams): number => {
 const writeFilters = (
   filters: StayFilterState,
   page = 1,
+  currentParams = new URLSearchParams(),
+  defaultSort: StaySort = DEFAULT_STAY_FILTERS.sort,
 ): URLSearchParams => {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams(currentParams);
+  ["q", "type", "region", "minPrice", "maxPrice", "rating", "amenities", "sort", "page"]
+    .forEach((key) => params.delete(key));
 
   if (filters.query.trim()) {
     params.set("q", filters.query);
@@ -117,7 +124,7 @@ const writeFilters = (
   if (filters.amenities.length > 0) {
     params.set("amenities", filters.amenities.join(","));
   }
-  if (filters.sort !== DEFAULT_STAY_FILTERS.sort) {
+  if (filters.sort !== defaultSort) {
     params.set("sort", filters.sort);
   }
   if (page > 1) {
@@ -129,58 +136,60 @@ const writeFilters = (
 
 export default function ExplorePage() {
   useDocumentTitle("Explore stays");
+  const { stays, categories, destinations, allAmenities, settings } = useProjectData();
+  const { pageSize, defaultSort } = settings.catalog;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const paramKey = searchParams.toString();
 
-  const filters = useMemo(() => readFilters(searchParams), [searchParams]);
+  const filters = useMemo(
+    () => readFilters(searchParams, { categories, destinations, allAmenities, defaultSort }),
+    [searchParams, categories, destinations, allAmenities, defaultSort],
+  );
   const filteredStays = useMemo(
     () => filterAndSortStays(stays, filters),
-    [filters],
+    [stays, filters],
   );
   const totalPages = Math.max(
     1,
-    Math.ceil(filteredStays.length / ITEMS_PER_PAGE),
+    Math.ceil(filteredStays.length / pageSize),
   );
   const requestedPage = readPage(searchParams);
   const currentPage = Math.min(requestedPage, totalPages);
   const visibleStays = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredStays.slice(start, start + ITEMS_PER_PAGE);
-  }, [currentPage, filteredStays]);
-
-  useEffect(() => {
-    setIsLoading(true);
-    const timeout = window.setTimeout(() => setIsLoading(false), LOADING_DELAY);
-    return () => window.clearTimeout(timeout);
-  }, [paramKey]);
+    const start = (currentPage - 1) * pageSize;
+    return filteredStays.slice(start, start + pageSize);
+  }, [currentPage, filteredStays, pageSize]);
 
   useEffect(() => {
     const pageParam = searchParams.get("page");
     const canonicalPage = currentPage > 1 ? String(currentPage) : null;
 
     if (pageParam !== null && pageParam !== canonicalPage) {
-      setSearchParams(writeFilters(filters, currentPage), { replace: true });
+      setSearchParams(writeFilters(filters, currentPage, searchParams, defaultSort), { replace: true });
     }
-  }, [currentPage, filters, searchParams, setSearchParams]);
+  }, [currentPage, filters, searchParams, setSearchParams, defaultSort]);
 
   const updateFilters = useCallback(
     (
       nextFilters: StayFilterState,
       options: { replace?: boolean } = {},
     ) => {
-      setSearchParams(writeFilters(nextFilters), {
+      setSearchParams(writeFilters(nextFilters, 1, searchParams, defaultSort), {
         replace: options.replace ?? false,
       });
     },
-    [setSearchParams],
+    [setSearchParams, searchParams, defaultSort],
   );
 
   const resetFilters = useCallback(() => {
-    setSearchParams(new URLSearchParams());
-  }, [setSearchParams]);
+    setSearchParams(writeFilters(
+      { ...DEFAULT_STAY_FILTERS, sort: defaultSort },
+      1,
+      searchParams,
+      defaultSort,
+    ));
+  }, [setSearchParams, searchParams, defaultSort]);
 
   const closeMobileFilters = useCallback(() => {
     setMobileFiltersOpen(false);
@@ -189,14 +198,14 @@ export default function ExplorePage() {
   const handlePageChange = useCallback(
     (page: number) => {
       const nextPage = Math.min(Math.max(page, 1), totalPages);
-      setSearchParams(writeFilters(filters, nextPage));
+      setSearchParams(writeFilters(filters, nextPage, searchParams, defaultSort));
       window.requestAnimationFrame(() => {
         document
           .getElementById("explore-results")
           ?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     },
-    [filters, setSearchParams, totalPages],
+    [filters, setSearchParams, totalPages, searchParams, defaultSort],
   );
 
   const removeAmenity = (amenity: string) => {
@@ -234,8 +243,8 @@ export default function ExplorePage() {
         <div className={styles.introNote} aria-label="SkyNature selection">
           <Leaf size={22} aria-hidden="true" />
           <div>
-            <strong>24 handpicked places</strong>
-            <span>Across 16 inspiring regions</span>
+            <strong>{stays.length} handpicked places</strong>
+            <span>Across {destinations.length} inspiring regions</span>
           </div>
         </div>
       </section>
@@ -337,7 +346,7 @@ export default function ExplorePage() {
                   onClick={() => updateFilters({ ...filters, minPrice: null })}
                   aria-label="Remove minimum price filter"
                 >
-                  From {formatCurrency(filters.minPrice)}
+                  From {formatCurrency(filters.minPrice, settings.locale, settings.currency)}
                   <X size={14} aria-hidden="true" />
                 </button>
               )}
@@ -347,7 +356,7 @@ export default function ExplorePage() {
                   onClick={() => updateFilters({ ...filters, maxPrice: null })}
                   aria-label="Remove maximum price filter"
                 >
-                  Up to {formatCurrency(filters.maxPrice)}
+                  Up to {formatCurrency(filters.maxPrice, settings.locale, settings.currency)}
                   <X size={14} aria-hidden="true" />
                 </button>
               )}
@@ -385,26 +394,12 @@ export default function ExplorePage() {
           <div
             id="explore-results"
             className={styles.resultsAnchor}
-            aria-busy={isLoading}
           >
             <span className="sr-only" role="status" aria-live="polite">
-              {isLoading ? "Loading stays" : resultLabel + " found"}
+              {resultLabel + " found"}
             </span>
 
-            {isLoading ? (
-              <div className={styles.grid} aria-hidden="true">
-                {Array.from({ length: ITEMS_PER_PAGE }, (_, index) => (
-                  <div className={styles.skeleton} key={index}>
-                    <div className={styles.skeletonImage} />
-                    <div className={styles.skeletonBody}>
-                      <div className={styles.skeletonShortLine} />
-                      <div className={styles.skeletonLongLine} />
-                      <div className={styles.skeletonMediumLine} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : visibleStays.length > 0 ? (
+            {visibleStays.length > 0 ? (
               <>
                 <div className={styles.grid}>
                   {visibleStays.map((stay) => (

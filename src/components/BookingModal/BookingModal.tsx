@@ -1,6 +1,7 @@
-import { FormEvent, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, type FormEvent } from "react";
 import { Check, CheckCircle2, Mail, UserRound } from "lucide-react";
 import type { Stay } from "../../types/stay";
+import { useProjectData } from "../../context/ProjectDataContext";
 import { formatCurrency, formatDate } from "../../utils/formatters";
 import Modal from "../Modal/Modal";
 import styles from "./BookingModal.module.scss";
@@ -21,18 +22,21 @@ interface FormValues {
 
 type FormErrors = Partial<Record<keyof FormValues, string>>;
 
-const initialValues: FormValues = {
+const createInitialValues = (guests: number): FormValues => ({
   checkIn: "",
   checkOut: "",
-  guests: "2",
+  guests: String(guests),
   name: "",
   email: "",
-};
+});
 
 const dayMs = 1000 * 60 * 60 * 24;
 
 export default function BookingModal({ stay, open, onClose }: BookingModalProps) {
-  const [values, setValues] = useState<FormValues>(initialValues);
+  const { settings } = useProjectData();
+  const { locale, currency, booking } = settings;
+  const defaultGuests = Math.min(stay.maxGuests, Math.max(1, booking.defaultGuests));
+  const [values, setValues] = useState<FormValues>(() => createInitialValues(defaultGuests));
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
   const today = new Date().toISOString().slice(0, 10);
@@ -44,8 +48,8 @@ export default function BookingModal({ stay, open, onClose }: BookingModalProps)
   }, [values.checkIn, values.checkOut]);
 
   const subtotal = nights * stay.price;
-  const cleaningFee = nights ? 45 : 0;
-  const serviceFee = nights ? Math.round(subtotal * 0.12) : 0;
+  const cleaningFee = nights ? booking.cleaningFee : 0;
+  const serviceFee = nights ? Math.round(subtotal * booking.serviceFeeRate) : 0;
   const total = subtotal + cleaningFee + serviceFee;
 
   const update = (field: keyof FormValues, value: string) => {
@@ -61,7 +65,7 @@ export default function BookingModal({ stay, open, onClose }: BookingModalProps)
     else if (values.checkIn && values.checkOut <= values.checkIn) nextErrors.checkOut = "Check-out must be after check-in.";
     else if (nights < stay.stayInfo.minimumNights) nextErrors.checkOut = `This stay requires at least ${stay.stayInfo.minimumNights} nights.`;
     const guestCount = Number(values.guests);
-    if (!guestCount || guestCount > stay.maxGuests) nextErrors.guests = `Choose between 1 and ${stay.maxGuests} guests.`;
+    if (!Number.isInteger(guestCount) || guestCount < 1 || guestCount > stay.maxGuests) nextErrors.guests = `Choose between 1 and ${stay.maxGuests} guests.`;
     if (values.name.trim().length < 2) nextErrors.name = "Enter your full name.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) nextErrors.email = "Enter a valid email address.";
     return nextErrors;
@@ -74,14 +78,12 @@ export default function BookingModal({ stay, open, onClose }: BookingModalProps)
     if (Object.keys(nextErrors).length === 0) setSubmitted(true);
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
-    window.setTimeout(() => {
-      setValues(initialValues);
-      setErrors({});
-      setSubmitted(false);
-    }, 200);
-  };
+    setValues(createInitialValues(defaultGuests));
+    setErrors({});
+    setSubmitted(false);
+  }, [defaultGuests, onClose]);
 
   return (
     <Modal open={open} onClose={handleClose} title={submitted ? "Request received" : `Book ${stay.name}`}>
@@ -89,13 +91,13 @@ export default function BookingModal({ stay, open, onClose }: BookingModalProps)
         <div className={styles.success} role="status">
           <CheckCircle2 size={54} strokeWidth={1.5} aria-hidden="true" />
           <h3>Your nature break is one step closer</h3>
-          <p>Thanks, {values.name.trim()}. We have prepared a booking request for {formatDate(values.checkIn)} to {formatDate(values.checkOut)}.</p>
+          <p>Thanks, {values.name.trim()}. We have prepared a booking request for {formatDate(values.checkIn, locale)} to {formatDate(values.checkOut, locale)}.</p>
           <div className={styles.confirmation}>
             <span>{nights} nights · {values.guests} guests</span>
-            <strong>{formatCurrency(total)} total</strong>
+            <strong>{formatCurrency(total, locale, currency)} total</strong>
           </div>
           <p className={styles.note}>This is a demo booking. No payment has been taken.</p>
-          <button type="button" className={styles.primaryButton} onClick={handleClose}>Done</button>
+          <button type="button" className={styles.primaryButton} onClick={handleClose} autoFocus>Done</button>
         </div>
       ) : (
         <form className={styles.form} onSubmit={handleSubmit} noValidate>
@@ -157,10 +159,10 @@ export default function BookingModal({ stay, open, onClose }: BookingModalProps)
             </label>
           </div>
           <div className={styles.priceSummary} aria-live="polite">
-            <div><span>{formatCurrency(stay.price)} × {nights || 0} nights</span><span>{formatCurrency(subtotal)}</span></div>
-            <div><span>Cleaning fee</span><span>{formatCurrency(cleaningFee)}</span></div>
-            <div><span>Service fee</span><span>{formatCurrency(serviceFee)}</span></div>
-            <div className={styles.total}><strong>Total</strong><strong>{formatCurrency(total)}</strong></div>
+            <div><span>{formatCurrency(stay.price, locale, currency)} × {nights || 0} nights</span><span>{formatCurrency(subtotal, locale, currency)}</span></div>
+            <div><span>Cleaning fee</span><span>{formatCurrency(cleaningFee, locale, currency)}</span></div>
+            <div><span>Service fee</span><span>{formatCurrency(serviceFee, locale, currency)}</span></div>
+            <div className={styles.total}><strong>Total</strong><strong>{formatCurrency(total, locale, currency)}</strong></div>
           </div>
           <button type="submit" className={styles.primaryButton}>
             <Check size={18} aria-hidden="true" />

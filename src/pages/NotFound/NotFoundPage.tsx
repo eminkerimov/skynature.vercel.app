@@ -1,10 +1,12 @@
 import { ArrowLeft, Compass } from "lucide-react";
 import { Link } from "react-router-dom";
-import mistyWoodlandImage from "../../assets/images/landscapes/misty-woodland.webp";
+import { useProjectData } from "../../context/ProjectDataContext";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import styles from "./NotFoundPage.module.scss";
 
 export function NotFoundPage() {
+  const { images, home } = useProjectData();
+  const mistyWoodlandImage = images.find((image) => image.id === "misty-woodland")?.url ?? home.hero.image;
   useDocumentTitle("Page not found");
 
   return (

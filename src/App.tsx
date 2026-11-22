@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout/AppLayout";
+import { ProjectDataProvider } from "./context/ProjectDataContext";
 import styles from "./App.module.scss";
 
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
@@ -20,16 +21,18 @@ function PageLoader() {
 
 export default function App() {
   return (
-    <Suspense fallback={<PageLoader />}>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="explore" element={<ExplorePage />} />
-          <Route path="stays/:slug" element={<StayPage />} />
-          <Route path="saved" element={<SavedPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-      </Routes>
-    </Suspense>
+    <ProjectDataProvider>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="explore" element={<ExplorePage />} />
+            <Route path="stays/:slug" element={<StayPage />} />
+            <Route path="saved" element={<SavedPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </Suspense>
+    </ProjectDataProvider>
   );
 }

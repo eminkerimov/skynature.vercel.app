@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import Badge from "../../components/Badge/Badge";
 import StayCard from "../../components/StayCard/StayCard";
-import { stays } from "../../data/stays";
+import { useProjectData } from "../../context/ProjectDataContext";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import { useFavorites } from "../../hooks/useFavorites";
 import styles from "./SavedPage.module.scss";
@@ -11,11 +11,12 @@ import styles from "./SavedPage.module.scss";
 export function SavedPage() {
   useDocumentTitle("Saved stays");
 
+  const { stays } = useProjectData();
   const { ids } = useFavorites();
   const savedStays = useMemo(() => {
     const savedIds = new Set(ids);
     return stays.filter((stay) => savedIds.has(stay.id));
-  }, [ids]);
+  }, [ids, stays]);
 
   return (
     <main className={styles.page}>

@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-
-const BRAND_NAME = "SkyNature";
+import { useProjectData } from "../context/ProjectDataContext";
 
 export function useDocumentTitle(title: string) {
+  const { site } = useProjectData();
   useEffect(() => {
-    document.title = `${title} | ${BRAND_NAME}`;
+    document.title = `${title} | ${site.name}`;
 
     return () => {
-      document.title = BRAND_NAME;
+      document.title = site.name;
     };
-  }, [title]);
+  }, [title, site.name]);
 }

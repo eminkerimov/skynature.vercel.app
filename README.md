@@ -2,19 +2,20 @@
 
 SkyNature is a responsive nature-stay discovery and booking experience for fictional eco homes, forest cabins, glamping tents, lakeside hideaways, treehouses, and mountain retreats.
 
-The project is a client-side product demo: listings and reviews are local mock data, favourites persist in the browser, and booking requests are completed locally without a backend or payment.
+The project is a client-side product demo. Listings, reviews, editorial content, settings, and image URLs come from one public JSON file on Cloudflare Pages. Favourites persist in the browser, and booking requests are completed locally without a backend or payment.
 
 ## Features
 
 - Editorial home page with destination search, stay categories, featured stays, destinations, trust points, guest notes, and clear calls to action.
-- Explore catalogue with 24 typed stays, query search, multi-criteria filters, sorting, removable filter chips, pagination, skeleton loading, and an empty state.
+- Explore catalogue with 30 typed stays, query search, multi-criteria filters, sorting, removable filter chips, pagination, and an empty state.
 - Filter and page state synchronized with `URLSearchParams`, including browser back/forward support.
 - Responsive desktop filter sidebar and keyboard-accessible mobile filter drawer.
 - Stay detail pages with a responsive gallery, amenities, activities, house information, reviews, related stays, and a sticky booking summary.
 - Accessible booking modal with validation, live cost calculation, focus management, Escape handling, and a success state.
 - Saved stays stored in `localStorage` through a dedicated Context and custom hook.
 - Lazy-loaded routes, dynamic document titles, scroll restoration, error boundary, and a themed 404 page.
-- Local WebP imagery only; there are no remote image or data dependencies.
+- One shared request for project data, an in-memory cache across routes, response validation, a loading state, and retry after errors.
+- Five WebP photographs per stay and four landscape images served from Cloudflare Pages.
 
 ## Stack
 
@@ -29,15 +30,16 @@ The project is a client-side product demo: listings and reviews are local mock d
 
 ```text
 src/
-├── assets/       Local fonts and optimized WebP imagery
+├── assets/fonts/ Local font files
 ├── components/   Reusable interface and behaviour components
-├── context/      Favourites state provider
-├── data/         Typed local stay catalogue
+├── context/      Project-data and favourites providers
 ├── hooks/        Shared React hooks
 ├── layouts/      AppLayout with shared header and footer
 ├── pages/        Home, Explore, Stay, Saved, and NotFound routes
+├── services/     Shared JSON request, cache, and response validation
 ├── styles/       Global reset, tokens, and shared design primitives
-├── test/         Global test setup
+├── test/         Test setup, shared data provider, and fixtures
+│   └── fixtures/project-data.json  Project-data fixture for tests
 ├── types/        Domain types
 └── utils/        Filtering, sorting, and formatting helpers
 ```
@@ -63,8 +65,26 @@ npm run preview
 
 ## Deployment
 
-`vercel.json` rewrites requests to `index.html`, so client-side routes can be opened directly on Vercel.
+Build the frontend with `npm run build` and publish the contents of `dist` to the existing Cloudflare Workers & Pages frontend project. The separate `dbem` Pages project hosts public content:
+
+```text
+skynature/
+  data.json
+  images/
+    forest-river.webp
+    stay-01-cover.webp
+    stay-01-detail-01.webp
+    ...
+```
+
+The app reads `https://dbem.pages.dev/skynature/data.json` once per app session, including React StrictMode. Navigating between pages uses the same cached object. A fresh page load revalidates the JSON with the server. Images load from the URLs in that JSON.
+
+To change public content, update `data.json` or the images and publish the complete local `dbem` folder using the existing manual Pages upload workflow. Frontend code does not need rebuilding for these content updates; visitors receive them after reloading the page. Keep the deployed paths rooted at `/skynature`, and preserve other projects in the upload.
+
+An Internet connection is required for local development as well. If the JSON cannot be loaded or has an incompatible format, the app shows a retry action.
 
 ## Testing
 
-The suite covers the pure filtering/sorting pipeline, favourites persistence and recovery, and the booking form validation, pricing, and success flow.
+The suite covers request deduplication and caching, retries and timeouts, response validation, route navigation using one request, URL filter persistence, JSON-driven home content, favourites, and booking validation, pricing, and keyboard entry without losing focus.
+
+Tests use the isolated fixture `src/test/fixtures/project-data.json`. The production app does not import this fixture.
