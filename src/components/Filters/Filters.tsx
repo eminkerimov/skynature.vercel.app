@@ -108,6 +108,25 @@ function FilterFields({
         </select>
       </div>
 
+      <div className={styles.field}>
+        <label htmlFor={idPrefix + "-guests"}>Guests</label>
+        <input
+          id={idPrefix + "-guests"}
+          type="number"
+          min={settings.search.minGuests}
+          max={settings.search.maxGuests}
+          step={1}
+          inputMode="numeric"
+          placeholder="Any number of guests"
+          value={value.guests ?? ""}
+          onChange={(event) => setValue(
+            "guests",
+            event.target.value ? Number(event.target.value) : null,
+            { replace: true },
+          )}
+        />
+      </div>
+
       <fieldset className={styles.priceGroup}>
         <legend>Price per night</legend>
         <div className={styles.priceInputs}>

@@ -17,6 +17,7 @@ import type {
   StayType,
 } from "../../types/stay";
 import { formatCurrency } from "../../utils/formatters";
+import { readBookingSearch } from "../../utils/staySearch";
 import {
   DEFAULT_STAY_FILTERS,
   filterAndSortStays,
@@ -78,6 +79,7 @@ const readFilters = (
       ? (typeParam as StayType)
       : "",
     region: destinations.includes(regionParam) ? regionParam : "",
+    guests: readBookingSearch(params.toString()).guests,
     minPrice: parseOptionalNumber(params.get("minPrice")),
     maxPrice: parseOptionalNumber(params.get("maxPrice")),
     minRating: parseOptionalNumber(params.get("rating"), 5),
@@ -100,7 +102,7 @@ const writeFilters = (
   defaultSort: StaySort = DEFAULT_STAY_FILTERS.sort,
 ): URLSearchParams => {
   const params = new URLSearchParams(currentParams);
-  ["q", "type", "region", "minPrice", "maxPrice", "rating", "amenities", "sort", "page"]
+  ["q", "type", "region", "guests", "minPrice", "maxPrice", "rating", "amenities", "sort", "page"]
     .forEach((key) => params.delete(key));
 
   if (filters.query.trim()) {
@@ -111,6 +113,9 @@ const writeFilters = (
   }
   if (filters.region) {
     params.set("region", filters.region);
+  }
+  if (filters.guests !== null) {
+    params.set("guests", String(filters.guests));
   }
   if (filters.minPrice !== null) {
     params.set("minPrice", String(filters.minPrice));
@@ -219,6 +224,7 @@ export default function ExplorePage() {
     Number(Boolean(filters.query)) +
     Number(Boolean(filters.type)) +
     Number(Boolean(filters.region)) +
+    Number(filters.guests !== null) +
     Number(filters.minPrice !== null) +
     Number(filters.maxPrice !== null) +
     Number(filters.minRating !== null) +
@@ -337,6 +343,16 @@ export default function ExplorePage() {
                   aria-label={"Remove region filter " + filters.region}
                 >
                   {filters.region}
+                  <X size={14} aria-hidden="true" />
+                </button>
+              )}
+              {filters.guests !== null && (
+                <button
+                  type="button"
+                  onClick={() => updateFilters({ ...filters, guests: null })}
+                  aria-label="Remove guest count filter"
+                >
+                  {filters.guests} {filters.guests === 1 ? "guest" : "guests"}
                   <X size={14} aria-hidden="true" />
                 </button>
               )}

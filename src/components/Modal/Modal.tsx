@@ -8,6 +8,7 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: ReactNode;
+  variant?: "default" | "fullscreen";
 }
 
 const focusableSelector = [
@@ -19,7 +20,7 @@ const focusableSelector = [
   "[tabindex]:not([tabindex='-1'])",
 ].join(",");
 
-export default function Modal({ open, onClose, title, children }: ModalProps) {
+export default function Modal({ open, onClose, title, children, variant = "default" }: ModalProps) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -72,12 +73,12 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
   if (!open) return null;
 
   return createPortal(
-    <div className={styles.backdrop} onMouseDown={(event) => {
+    <div className={`${styles.backdrop} ${variant === "fullscreen" ? styles.backdropFullscreen : ""}`} onMouseDown={(event) => {
       if (event.target === event.currentTarget) onClose();
     }}>
       <div
         ref={dialogRef}
-        className={styles.dialog}
+        className={`${styles.dialog} ${variant === "fullscreen" ? styles.dialogFullscreen : ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

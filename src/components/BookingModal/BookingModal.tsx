@@ -1,8 +1,9 @@
-import { useCallback, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { Check, CheckCircle2, Mail, UserRound } from "lucide-react";
 import type { Stay } from "../../types/stay";
 import { useProjectData } from "../../context/ProjectDataContext";
 import { formatCurrency, formatDate } from "../../utils/formatters";
+import { localDateKey, readBookingSearch } from "../../utils/staySearch";
 import Modal from "../Modal/Modal";
 import styles from "./BookingModal.module.scss";
 
@@ -10,6 +11,11 @@ interface BookingModalProps {
   stay: Stay;
   open: boolean;
   onClose: () => void;
+  initialValues?: {
+    checkIn?: string;
+    checkOut?: string;
+    guests?: number | null;
+  };
 }
 
 interface FormValues {
@@ -22,24 +28,45 @@ interface FormValues {
 
 type FormErrors = Partial<Record<keyof FormValues, string>>;
 
-const createInitialValues = (guests: number): FormValues => ({
-  checkIn: "",
-  checkOut: "",
-  guests: String(guests),
-  name: "",
-  email: "",
-});
+const createInitialValues = (
+  defaultGuests: number,
+  maxGuests: number,
+  initialValues?: BookingModalProps["initialValues"],
+): FormValues => {
+  const params = new URLSearchParams();
+  if (initialValues?.checkIn) params.set("checkIn", initialValues.checkIn);
+  if (initialValues?.checkOut) params.set("checkOut", initialValues.checkOut);
+  if (initialValues?.guests != null) params.set("guests", String(initialValues.guests));
+  const search = readBookingSearch(params.toString());
+  return {
+    checkIn: search.checkIn,
+    checkOut: search.checkOut,
+    guests: String(Math.min(maxGuests, Math.max(1, search.guests ?? defaultGuests))),
+    name: "",
+    email: "",
+  };
+};
 
 const dayMs = 1000 * 60 * 60 * 24;
 
-export default function BookingModal({ stay, open, onClose }: BookingModalProps) {
+export default function BookingModal({ stay, open, onClose, initialValues }: BookingModalProps) {
   const { settings } = useProjectData();
   const { locale, currency, booking } = settings;
-  const defaultGuests = Math.min(stay.maxGuests, Math.max(1, booking.defaultGuests));
-  const [values, setValues] = useState<FormValues>(() => createInitialValues(defaultGuests));
+  const initialFormValues = useMemo(
+    () => createInitialValues(booking.defaultGuests, stay.maxGuests, initialValues),
+    [booking.defaultGuests, stay.maxGuests, initialValues?.checkIn, initialValues?.checkOut, initialValues?.guests],
+  );
+  const [values, setValues] = useState<FormValues>(initialFormValues);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateKey();
+
+  useEffect(() => {
+    if (!open) return;
+    setValues(initialFormValues);
+    setErrors({});
+    setSubmitted(false);
+  }, [open, stay.id, initialFormValues]);
 
   const nights = useMemo(() => {
     if (!values.checkIn || !values.checkOut) return 0;
@@ -80,10 +107,10 @@ export default function BookingModal({ stay, open, onClose }: BookingModalProps)
 
   const handleClose = useCallback(() => {
     onClose();
-    setValues(createInitialValues(defaultGuests));
+    setValues(initialFormValues);
     setErrors({});
     setSubmitted(false);
-  }, [defaultGuests, onClose]);
+  }, [initialFormValues, onClose]);
 
   return (
     <Modal open={open} onClose={handleClose} title={submitted ? "Request received" : `Book ${stay.name}`}>

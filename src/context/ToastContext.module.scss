@@ -1,0 +1,48 @@
+@use "../styles/tokens" as *;
+
+.viewport {
+  position: fixed;
+  z-index: 200;
+  top: calc(var(--header-height, 78px) + 14px);
+  right: 20px;
+  left: 20px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+:global(body.modal-open) .viewport { visibility: hidden; }
+
+.notice {
+  width: max-content;
+  max-width: min(100%, 620px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 16px;
+  border: 1px solid rgba($green-300, 0.35);
+  border-radius: 16px;
+  background: $green-950;
+  color: $white;
+  box-shadow: $shadow-lg;
+  pointer-events: auto;
+  animation: arrive 180ms ease-out;
+
+  > svg { flex: none; color: $green-300; }
+  > span { font-size: 0.78rem; line-height: 1.5; }
+}
+
+.action, .close { @include button-reset; flex: none; cursor: pointer; }
+.action { color: $green-300; font-size: 0.75rem; font-weight: 800; text-underline-offset: 4px; }
+.action:hover { text-decoration: underline; }
+.close { width: 32px; height: 32px; display: grid; place-items: center; color: rgba($white, 0.8); }
+
+@keyframes arrive {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 560px) {
+  .viewport { right: 12px; left: 12px; }
+  .notice { gap: 9px; padding: 12px; }
+}

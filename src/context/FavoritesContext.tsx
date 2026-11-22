@@ -13,6 +13,7 @@ export interface FavoritesContextValue {
   ids: string[];
   isFavorite: (id: string) => boolean;
   toggleFavorite: (id: string) => void;
+  setFavorite: (id: string, saved: boolean) => void;
 }
 
 export const FavoritesContext = createContext<
@@ -70,9 +71,17 @@ export function FavoritesProvider({ children }: PropsWithChildren) {
     );
   }, []);
 
+  const setFavorite = useCallback((id: string, saved: boolean) => {
+    if (!id.trim()) return;
+    setIds((currentIds) => {
+      if (currentIds.includes(id) === saved) return currentIds;
+      return saved ? [...currentIds, id] : currentIds.filter((currentId) => currentId !== id);
+    });
+  }, []);
+
   const value = useMemo(
-    () => ({ ids, isFavorite, toggleFavorite }),
-    [ids, isFavorite, toggleFavorite],
+    () => ({ ids, isFavorite, toggleFavorite, setFavorite }),
+    [ids, isFavorite, toggleFavorite, setFavorite],
   );
 
   return (

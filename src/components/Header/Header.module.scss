@@ -112,7 +112,7 @@
   background: $white;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   .menuButton {
     display: grid;
   }
@@ -136,6 +136,7 @@
   }
 
   .links {
+    flex-wrap: wrap;
     align-items: stretch;
     flex: 1;
   }

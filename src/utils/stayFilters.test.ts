@@ -139,4 +139,24 @@ describe("filterAndSortStays", () => {
     ).toEqual(["quietwater", "mosswood", "fernwatch"]);
     expect(sampleStays.map((stay) => stay.id)).toEqual(originalOrder);
   });
+
+  it("keeps only stays with room for the requested number of guests", () => {
+    const stays = [
+      makeStay({ id: "couple", maxGuests: 2 }),
+      makeStay({ id: "family", maxGuests: 4 }),
+      makeStay({ id: "group", maxGuests: 8 }),
+    ];
+    expect(filterAndSortStays(stays, { guests: 4 }).map((stay) => stay.id)).toEqual(["family", "group"]);
+    expect(filterAndSortStays(stays, { guests: 9 })).toEqual([]);
+    expect(filterAndSortStays(stays, { guests: null })).toHaveLength(3);
+  });
+
+  it("combines capacity with other filters instead of treating it as availability", () => {
+    const stays = [
+      makeStay({ id: "small-cabin", type: "Cabin", maxGuests: 2 }),
+      makeStay({ id: "large-cabin", type: "Cabin", maxGuests: 6 }),
+      makeStay({ id: "large-lakehouse", type: "Lakeside", maxGuests: 6 }),
+    ];
+    expect(filterAndSortStays(stays, { type: "Cabin", guests: 4 }).map((stay) => stay.id)).toEqual(["large-cabin"]);
+  });
 });

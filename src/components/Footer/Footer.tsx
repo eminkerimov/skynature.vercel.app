@@ -7,6 +7,7 @@ import styles from "./Footer.module.scss";
 export default function Footer() {
   const { site, numbers, settings } = useProjectData();
   const regionCount = new Intl.NumberFormat(settings.locale).format(numbers.regions);
+  const hasAboutLink = site.navigation.footer.some((group) => group.links.some((link) => link.href === "/about"));
 
   return (
     <footer className={styles.footer}>
@@ -19,9 +20,12 @@ export default function Footer() {
             {site.contacts.hello}
           </a>
         </div>
-        {site.navigation.footer.map((group) => (
+        {site.navigation.footer.map((group, index) => (
           <div className={styles.column} key={group.title}>
             <h2>{group.title}</h2>
+            {index === site.navigation.footer.length - 1 && !hasAboutLink && (
+              <Link to="/about">About {site.name}</Link>
+            )}
             {group.links.map((link) =>
               link.href.startsWith("/") ? (
                 <Link key={link.href} to={link.href}>{link.label}</Link>

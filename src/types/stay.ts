@@ -57,6 +57,7 @@ export interface StayFilters {
   query?: string;
   type?: StayType | "";
   region?: string;
+  guests?: number | null;
   minPrice?: number | null;
   maxPrice?: number | null;
   minRating?: number | null;
@@ -68,6 +69,7 @@ export interface StayFilterState {
   query: string;
   type: StayType | "";
   region: string;
+  guests: number | null;
   minPrice: number | null;
   maxPrice: number | null;
   minRating: number | null;

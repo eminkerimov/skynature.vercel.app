@@ -7,12 +7,16 @@ The project is a client-side product demo. Listings, reviews, editorial content,
 ## Features
 
 - Editorial home page with destination search, stay categories, featured stays, destinations, trust points, guest notes, and clear calls to action.
+- About page with contrasting light/dark sections, animated photo panels linked to stay types, catalogue counts, and a responsive photo-and-text grid.
 - Explore catalogue with 30 typed stays, query search, multi-criteria filters, sorting, removable filter chips, pagination, and an empty state.
 - Filter and page state synchronized with `URLSearchParams`, including browser back/forward support.
 - Responsive desktop filter sidebar and keyboard-accessible mobile filter drawer.
-- Stay detail pages with a responsive gallery, amenities, activities, house information, reviews, related stays, and a sticky booking summary.
+- Stay detail pages with a five-photo gallery, mobile swipe, fullscreen keyboard/touch navigation, amenities, reviews, related stays, and a mobile booking bar.
 - Accessible booking modal with validation, live cost calculation, focus management, Escape handling, and a success state.
 - Saved stays stored in `localStorage` through a dedicated Context and custom hook.
+- Guest-capacity filtering and dates/guest counts carried from search into the booking form through the URL.
+- Compare up to three stays using a searchable picker in the floating selection bar or comparison page, with persistent selection and a price/amenity/policy table.
+- Animated save controls and a confirmation notification with Undo.
 - Lazy-loaded routes, dynamic document titles, scroll restoration, error boundary, and a themed 404 page.
 - One shared request for project data, an in-memory cache across routes, response validation, a loading state, and retry after errors.
 - Five WebP photographs per stay and four landscape images served from Cloudflare Pages.
@@ -32,10 +36,10 @@ The project is a client-side product demo. Listings, reviews, editorial content,
 src/
 ├── assets/fonts/ Local font files
 ├── components/   Reusable interface and behaviour components
-├── context/      Project-data and favourites providers
+├── context/      Project data, favourites, comparison, and notifications
 ├── hooks/        Shared React hooks
 ├── layouts/      AppLayout with shared header and footer
-├── pages/        Home, Explore, Stay, Saved, and NotFound routes
+├── pages/        Home, Explore, Stay, Saved, Compare, About, and NotFound routes
 ├── services/     Shared JSON request, cache, and response validation
 ├── styles/       Global reset, tokens, and shared design primitives
 ├── test/         Test setup, shared data provider, and fixtures
@@ -61,6 +65,8 @@ npm run preview
 - `/explore` — searchable and filterable catalogue
 - `/stays/:slug` — stay details and booking request
 - `/saved` — locally saved stays
+- `/compare` — compare up to three selected stays
+- `/about` — the idea behind SkyNature and how to choose a stay
 - `*` — 404 fallback
 
 ## Deployment
@@ -85,6 +91,8 @@ An Internet connection is required for local development as well. If the JSON ca
 
 ## Testing
 
-The suite covers request deduplication and caching, retries and timeouts, response validation, route navigation using one request, URL filter persistence, JSON-driven home content, favourites, and booking validation, pricing, and keyboard entry without losing focus.
+The suite covers request deduplication and caching, retries and timeouts, response validation, route navigation using one request, URL filter persistence, guest capacity, date/guest handoff into booking, JSON-driven home content, favourites and Undo, comparison limits/persistence, gallery navigation/focus, and booking validation, pricing, and keyboard entry without losing focus.
+
+Only saved-stay IDs and comparison IDs persist in browser storage. Search dates and guest counts travel in the URL. Availability is not checked against a booking service; submitting the booking form remains a local demo.
 
 Tests use the isolated fixture `src/test/fixtures/project-data.json`. The production app does not import this fixture.

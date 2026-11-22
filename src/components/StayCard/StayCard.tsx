@@ -1,9 +1,11 @@
-import { Heart, MapPin, Star, Users } from "lucide-react";
-import { Link } from "react-router-dom";
+import { MapPin, Star, Users } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import type { Stay } from "../../types/stay";
 import { formatCurrency } from "../../utils/formatters";
-import { useFavorites } from "../../hooks/useFavorites";
 import { useProjectData } from "../../context/ProjectDataContext";
+import { createStayHref } from "../../utils/staySearch";
+import FavoriteButton from "../FavoriteButton/FavoriteButton";
+import CompareButton from "../CompareButton/CompareButton";
 import Badge from "../Badge/Badge";
 import styles from "./StayCard.module.scss";
 
@@ -13,27 +15,19 @@ interface StayCardProps {
 
 export default function StayCard({ stay }: StayCardProps) {
   const { settings, images } = useProjectData();
-  const { isFavorite, toggleFavorite } = useFavorites();
-  const saved = isFavorite(stay.id);
+  const { search } = useLocation();
+  const href = createStayHref(stay.slug, search);
 
   return (
     <article className={styles.card}>
       <div className={styles.media}>
-        <Link to={`/stays/${stay.slug}`} aria-label={`View ${stay.name}`}>
+        <Link to={href} aria-label={`View ${stay.name}`}>
           <img src={stay.image} alt={images.find((image) => image.url === stay.image)?.alt ?? `${stay.name} in ${stay.location}`} loading="lazy" />
         </Link>
         <div className={styles.badge}>
           <Badge>{stay.type}</Badge>
         </div>
-        <button
-          type="button"
-          className={`${styles.favorite} ${saved ? styles.saved : ""}`}
-          onClick={() => toggleFavorite(stay.id)}
-          aria-label={saved ? `Remove ${stay.name} from saved stays` : `Save ${stay.name}`}
-          aria-pressed={saved}
-        >
-          <Heart size={19} fill={saved ? "currentColor" : "none"} aria-hidden="true" />
-        </button>
+        <FavoriteButton stay={stay} className={styles.favorite} savedClassName={styles.saved} />
       </div>
       <div className={styles.body}>
         <div className={styles.location}>
@@ -47,7 +41,7 @@ export default function StayCard({ stay }: StayCardProps) {
           </span>
         </div>
         <h3>
-          <Link to={`/stays/${stay.slug}`}>{stay.name}</Link>
+          <Link to={href}>{stay.name}</Link>
         </h3>
         <p className={styles.description}>{stay.shortDescription}</p>
         <div className={styles.footer}>
@@ -60,6 +54,7 @@ export default function StayCard({ stay }: StayCardProps) {
             <span> / night</span>
           </p>
         </div>
+        <CompareButton stay={stay} className={styles.compareButton} />
       </div>
     </article>
   );

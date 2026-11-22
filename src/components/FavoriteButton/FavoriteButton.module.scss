@@ -1,0 +1,7 @@
+.pulse { animation: heart-pulse 280ms ease-out; }
+
+@keyframes heart-pulse {
+  0%, 100% { transform: scale(1); }
+  45% { transform: scale(1.24); }
+  75% { transform: scale(0.94); }
+}

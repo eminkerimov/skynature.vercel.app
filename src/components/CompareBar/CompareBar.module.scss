@@ -1,0 +1,101 @@
+@use "../../styles/tokens" as *;
+
+.bar {
+  position: fixed;
+  z-index: 45;
+  right: 24px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  left: 24px;
+  max-width: 1152px;
+  margin-inline: auto;
+  padding: 15px 18px;
+  border: 1px solid rgba($green-700, 0.18);
+  border-radius: 20px;
+  background: $white;
+  color: $green-950;
+  box-shadow: $shadow-lg;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.summary {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.75rem;
+
+  strong { display: block; margin-bottom: 2px; font-size: 0.95rem; }
+}
+
+.selected {
+  display: flex;
+  flex: 1;
+  gap: 7px;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+    padding: 5px 6px 5px 10px;
+    border-radius: 10px;
+    background: $surface;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+
+.selected button,
+.status button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: $green-950;
+
+  &:hover { background: rgba($green-700, 0.1); }
+}
+
+.actions { display: flex; flex-shrink: 0; align-items: center; gap: 12px; }
+.selected .addSlot { flex: 0 0 auto; padding: 0; border: 1px dashed rgba($green-700, 0.55); background: transparent; }
+.selected .addStay { gap: 6px; min-height: 44px; padding: 8px 12px; color: $green-700; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+.selected .addStay:hover { background: $surface; }
+.clear { padding: 8px 0; border: 0; background: transparent; color: $muted; font-size: 0.75rem; text-decoration: underline; }
+.compare { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 16px; border-radius: 12px; background: $green-950; color: $white; font-size: 0.8rem; font-weight: 700; }
+.compare:hover { background: $green-700; }
+.status { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid $line; }
+.status p { margin: 0; color: $danger; font-size: 0.8rem; line-height: 1.5; }
+
+@media (max-width: 900px) {
+  .content { flex-wrap: wrap; gap: 10px; }
+  .summary { flex: 1; }
+  .selected { order: 3; flex-basis: 100%; }
+  .selected li { flex: 1; }
+}
+
+@media (max-width: 780px) {
+  .bar { right: 12px; left: 12px; padding: 12px; border-radius: 16px; }
+  .aboveBooking { bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .summary { gap: 7px; font-size: 0.68rem; }
+  .summary strong { font-size: 0.85rem; }
+  .selected { gap: 5px; }
+  .selected li { padding-left: 7px; font-size: 0.64rem; }
+  .compare { padding-inline: 13px; }
+}

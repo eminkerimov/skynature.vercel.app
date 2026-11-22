@@ -9,6 +9,7 @@ export const DEFAULT_STAY_FILTERS: StayFilterState = {
   query: "",
   type: "",
   region: "",
+  guests: null,
   minPrice: null,
   maxPrice: null,
   minRating: null,
@@ -65,6 +66,7 @@ export const filterAndSortStays = (
       const matchesQuery = !query || searchableLocation.includes(query);
       const matchesType = !type || stay.type === type;
       const matchesRegion = !region || normalize(stay.region) === region;
+      const matchesGuests = filters.guests == null || stay.maxGuests >= filters.guests;
       const matchesMinPrice =
         filters.minPrice == null || stay.price >= filters.minPrice;
       const matchesMaxPrice =
@@ -80,6 +82,7 @@ export const filterAndSortStays = (
         matchesQuery &&
         matchesType &&
         matchesRegion &&
+        matchesGuests &&
         matchesMinPrice &&
         matchesMaxPrice &&
         matchesRating &&

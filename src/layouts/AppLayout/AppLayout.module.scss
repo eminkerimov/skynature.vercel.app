@@ -7,3 +7,11 @@
 .main {
   flex: 1;
 }
+
+.compareSpace { padding-bottom: calc(var(--compare-bar-height, 120px) + 32px); }
+
+@media (max-width: 780px) {
+  .bookingSpace { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .compareSpace { padding-bottom: calc(var(--compare-bar-height, 140px) + 32px + env(safe-area-inset-bottom)); }
+  .compareSpace.bookingSpace { padding-bottom: calc(var(--compare-bar-height, 140px) + 108px + env(safe-area-inset-bottom)); }
+}

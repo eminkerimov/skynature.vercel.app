@@ -46,6 +46,12 @@ export default function Header() {
                 {link.label}
               </NavLink>
             ))}
+            {!site.navigation.header.some((link) => link.to === "/compare") && (
+              <NavLink to="/compare" className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ""}`}>Compare</NavLink>
+            )}
+            {!site.navigation.header.some((link) => link.to === "/about") && (
+              <NavLink to="/about" className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ""}`}>About</NavLink>
+            )}
           </div>
           <NavLink
             to={site.navigation.saved.href}

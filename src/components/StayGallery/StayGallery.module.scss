@@ -1,0 +1,217 @@
+@use "../../styles/tokens" as *;
+
+.gallery {
+  position: relative;
+  overflow: hidden;
+  border-radius: $radius-lg;
+  background: $warm;
+}
+
+.previews {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr 1fr;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  height: 520px;
+}
+
+.preview {
+  @include button-reset;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+
+  &:first-child { grid-row: span 2; }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 350ms ease;
+  }
+
+  &:hover img { transform: scale(1.025); }
+
+  &:focus-visible {
+    z-index: 1;
+    outline-offset: -5px;
+  }
+}
+
+.previewTools {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.counter,
+.allPhotos {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid rgba($white, 0.8);
+  border-radius: 999px;
+  background: rgba($white, 0.96);
+  color: $green-950;
+  box-shadow: $shadow-sm;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.counter { visibility: hidden; }
+.allPhotos { margin-left: auto; pointer-events: auto; }
+.allPhotos:hover { background: $surface; }
+
+.viewer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  min-height: 0;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+  gap: 16px;
+}
+
+.viewerArrow {
+  @include button-reset;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba($white, 0.28);
+  border-radius: 50%;
+  background: rgba($white, 0.08);
+  color: $white;
+  transition: background 160ms ease;
+
+  &:hover:not(:disabled) { background: rgba($white, 0.18); }
+  &:disabled { opacity: 0.35; }
+}
+
+.imageFrame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  touch-action: pan-y pinch-zoom;
+}
+
+.fullImage {
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - 270px);
+  max-height: calc(100dvh - 270px);
+  object-fit: contain;
+  animation: photo-in 180ms ease-out;
+}
+
+.viewerMeta {
+  display: flex;
+  flex-shrink: 0;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(100%, 960px);
+  margin-inline: auto;
+  color: rgba($white, 0.84);
+  font-size: 0.78rem;
+  line-height: 1.5;
+
+  p { margin: 0; }
+  span { flex-shrink: 0; font-weight: 700; }
+}
+
+.thumbnails {
+  display: flex;
+  flex-shrink: 0;
+  align-self: center;
+  gap: 10px;
+  max-width: 100%;
+  padding: 4px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.thumbnail {
+  @include button-reset;
+  width: 80px;
+  height: 60px;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 3px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  opacity: 0.6;
+  transition: opacity 160ms ease, border-color 160ms ease;
+
+  img { width: 100%; height: 100%; object-fit: cover; border-radius: 5px; }
+  &:hover { opacity: 1; }
+  &[aria-current="true"] { border-color: $green-300; opacity: 1; }
+}
+
+@keyframes photo-in {
+  from { opacity: 0; transform: translateY(5px); }
+}
+
+@media (max-width: 1000px) {
+  .previews { height: 450px; }
+}
+
+@media (max-width: 780px) {
+  .previews { height: 390px; }
+}
+
+@media (max-width: 590px) {
+  .previews {
+    display: flex;
+    gap: 0;
+    height: 320px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  .preview { flex: 0 0 100%; scroll-snap-align: start; }
+  .previewTools { right: 12px; bottom: 12px; left: 12px; }
+  .counter { visibility: visible; }
+  .stage { position: relative; display: block; }
+  .imageFrame { width: 100%; }
+  .viewerArrow {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba($ink, 0.72);
+
+    &:first-child { left: 6px; }
+    &:last-child { right: 6px; }
+  }
+  .viewer { gap: 10px; }
+  .viewerMeta { align-items: flex-start; font-size: 0.72rem; }
+  .viewerMeta p { max-height: 4.5em; overflow-y: auto; }
+  .thumbnail { width: 66px; height: 52px; }
+  .thumbnails { gap: 6px; }
+  .fullImage { max-height: calc(100dvh - 250px); }
+}

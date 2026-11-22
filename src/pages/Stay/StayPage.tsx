@@ -6,7 +6,6 @@ import {
   CalendarCheck,
   CheckCircle2,
   ChevronLeft,
-  Heart,
   Home,
   Info,
   MapPin,
@@ -15,26 +14,37 @@ import {
   Star,
   Users,
 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useProjectData } from "../../context/ProjectDataContext";
-import { useFavorites } from "../../hooks/useFavorites";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import { formatCurrency, formatDate } from "../../utils/formatters";
 import Badge from "../../components/Badge/Badge";
 import BookingModal from "../../components/BookingModal/BookingModal";
 import StayCard from "../../components/StayCard/StayCard";
+import StayGallery from "../../components/StayGallery/StayGallery";
+import FavoriteButton from "../../components/FavoriteButton/FavoriteButton";
+import CompareButton from "../../components/CompareButton/CompareButton";
+import { readBookingSearch } from "../../utils/staySearch";
 import styles from "./StayPage.module.scss";
 
 export default function StayPage() {
   const { slug } = useParams();
+  const { search } = useLocation();
   const { stays, images, settings } = useProjectData();
   const stay = stays.find((item) => item.slug === slug);
   const [bookingOpen, setBookingOpen] = useState(false);
-  const { isFavorite, toggleFavorite } = useFavorites();
   const imageAlts = useMemo(
     () => new Map(images.map((image) => [image.url, image.alt])),
     [images],
   );
+  const galleryImages = useMemo(
+    () => stay?.gallery.slice(0, 5).map((url, index) => ({
+      url,
+      alt: imageAlts.get(url) ?? `${stay.name} ${index === 0 ? "exterior" : `gallery view ${index + 1}`}`,
+    })) ?? [],
+    [stay, imageAlts],
+  );
+  const bookingDefaults = useMemo(() => readBookingSearch(search), [search]);
   useDocumentTitle(stay?.name ?? "Stay not found");
 
   if (!stay) {
@@ -48,7 +58,6 @@ export default function StayPage() {
     );
   }
 
-  const saved = isFavorite(stay.id);
   const related = stay.relatedIds
     .map((id) => stays.find((item) => item.id === id))
     .filter((item): item is (typeof stays)[number] => Boolean(item));
@@ -57,7 +66,7 @@ export default function StayPage() {
     <>
       <main className={styles.page}>
         <div className={styles.breadcrumbs}>
-          <Link to="/explore"><ChevronLeft size={16} aria-hidden="true" />Back to explore</Link>
+          <Link to={`/explore${search}`}><ChevronLeft size={16} aria-hidden="true" />Back to explore</Link>
           <span>Stays / {stay.region}</span>
         </div>
 
@@ -70,28 +79,13 @@ export default function StayPage() {
               <span><Star size={16} fill="currentColor" aria-hidden="true" />{stay.rating.toFixed(1)} · {stay.reviews.length} reviews</span>
             </p>
           </div>
-          <button
-            type="button"
-            className={`${styles.saveButton} ${saved ? styles.saved : ""}`}
-            onClick={() => toggleFavorite(stay.id)}
-            aria-pressed={saved}
-          >
-            <Heart size={18} fill={saved ? "currentColor" : "none"} aria-hidden="true" />
-            {saved ? "Saved" : "Save stay"}
-          </button>
+          <div className={styles.headingActions}>
+            <FavoriteButton stay={stay} className={styles.saveButton} savedClassName={styles.saved} iconSize={18} showLabel />
+            <CompareButton stay={stay} />
+          </div>
         </header>
 
-        <section className={styles.gallery} aria-label={`${stay.name} photo gallery`}>
-          {stay.gallery.slice(0, 5).map((image, index) => (
-            <figure key={`${image}-${index}`}>
-              <img
-                src={image}
-                alt={imageAlts.get(image) ?? `${stay.name} ${index === 0 ? "exterior" : `gallery view ${index + 1}`}`}
-                loading={index === 0 ? "eager" : "lazy"}
-              />
-            </figure>
-          ))}
-        </section>
+        <StayGallery key={stay.id} title={stay.name} images={galleryImages} />
 
         <div className={styles.contentGrid}>
           <div className={styles.content}>
@@ -182,7 +176,7 @@ export default function StayPage() {
               <span><CalendarCheck size={18} aria-hidden="true" />Minimum {stay.stayInfo.minimumNights} nights</span>
               <span><ShieldCheck size={18} aria-hidden="true" />Flexible cancellation</span>
             </div>
-            <button type="button" onClick={() => setBookingOpen(true)}>Check availability</button>
+            <button type="button" onClick={() => setBookingOpen(true)}>Choose dates</button>
             <p>You will not be charged yet.</p>
           </aside>
         </div>
@@ -192,7 +186,14 @@ export default function StayPage() {
           <div className={styles.relatedGrid}>{related.map((item) => <StayCard key={item.id} stay={item} />)}</div>
         </section>
       </main>
-      <BookingModal key={stay.id} stay={stay} open={bookingOpen} onClose={() => setBookingOpen(false)} />
+      <aside className={styles.mobileBooking} aria-label="Quick booking">
+        <div>
+          <p><strong>{formatCurrency(stay.price, settings.locale, settings.currency)}</strong><span> / night</span></p>
+          <small>Minimum {stay.stayInfo.minimumNights} nights</small>
+        </div>
+        <button type="button" aria-label={`Choose dates for ${stay.name}`} onClick={() => setBookingOpen(true)}>Choose dates</button>
+      </aside>
+      <BookingModal key={`${stay.id}:${search}`} stay={stay} open={bookingOpen} onClose={() => setBookingOpen(false)} initialValues={bookingDefaults} />
     </>
   );
 }
